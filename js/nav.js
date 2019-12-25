@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var content = document.querySelector("#body-content");
 
         if (page === "home") {
-          getArticles();
+          getStandings();
         } else if (page === "saved") {
           getSavedArticles();
         }

@@ -1,4 +1,4 @@
-var base_url = "https://private-044be-dicodingfootball.apiary-mock.com/";
+var base_url = "https://api.football-data.org/v2/";
 
 // Blok kode yang akan di panggil jika fetch berhasil
 function status(response) {
@@ -22,34 +22,35 @@ function error(error) {
 }
 
 // Blok kode untuk melakukan request data json
-function getArticles() {
+function getStandings() {
   if ('caches' in window) {
-    caches.match(base_url + "/v2/competitions/").then(function (response) {
+    caches.match(base_url + "competitions/PL/standings").then(function (response) {
       if (response) {
         response.json().then(function (data) {
-          var articlesHTML = "";
-          data.result.forEach(function (article) {
-            articlesHTML += `
-                      <div class="card">
-                        <a href="./article.html?id=${article.id}">
-                          <div class="card-image waves-effect waves-block waves-light">
-                            <img src="${article.thumbnail}" />
-                          </div>
-                        </a>
-                        <div class="card-content">
-                          <span class="card-title truncate">${article.title}</span>
-                          <p>${article.description}</p>
-                        </div>
-                      </div>
-                    `;
+          var standingsHTML = "";
+          data.standings[0].table.forEach(function (standing) {
+            standingsHTML += `
+              <tr>
+                  <td>${standing.position}.</td>
+                  <td>${standing.team.name}</td>
+                  <td>${standing.playedGames}</td>
+                  <td>${standing.won}</td>
+                  <td>${standing.draw}</td>
+                  <td>${standing.lost}</td>
+                  <td>${standing.goalsFor}</td>
+                  <td>${standing.goalsAgainst}</td>
+                  <td>${standing.goalDifference}</td>
+                  <td>${standing.points}</td>
+              </tr>
+            `;
           });
           // Sisipkan komponen card ke dalam elemen dengan id #content
-          document.getElementById("articles").innerHTML = articlesHTML;
+          document.getElementById("standings").innerHTML = standingsHTML;
         })
       }
     })
   }
-  fetch("https://api.football-data.org/v2/competitions/PL/", {
+  fetch(base_url + "competitions/PL/standings", {
     headers:{'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0'}
   })
     .then(status)
@@ -57,42 +58,25 @@ function getArticles() {
     .then(function (data) {
       // Objek/array JavaScript dari response.json() masuk lewat data.
       // Menyusun komponen card artikel secara dinamis
-      var articlesHTML = "";
-      data.seasons.forEach(function (article) {
-        if (article.winner !== null) {
-          articlesHTML += `
-              <div class="card">
-                <a href="./article.html?id=${article.id}">
-                  <div class="card-image waves-effect waves-block waves-light">
-                    <img src="${article.winner.crestUrl}" />
-                  </div>
-                </a>
-                <div class="card-content">
-                  <span class="card-title truncate">${article.winner.name}</span>
-                  <p>${article.startDate}</p>
-                  <p>${article.endDate}</p>
-                </div>
-              </div>
+      var standingsHTML = "";
+      data.standings[0].table.forEach(function (standing) {
+          standingsHTML += `
+            <tr>
+                <td>${standing.position}.</td>
+                <td>${standing.team.name}</td>
+                <td>${standing.playedGames}</td>
+                <td>${standing.won}</td>
+                <td>${standing.draw}</td>
+                <td>${standing.lost}</td>
+                <td>${standing.goalsFor}</td>
+                <td>${standing.goalsAgainst}</td>
+                <td>${standing.goalDifference}</td>
+                <td>${standing.points}</td>
+            </tr>
             `;
-        } else {
-          articlesHTML += `
-          <div class="card">
-            <a href="./article.html?id=${article.id}">
-              <div class="card-image waves-effect waves-block waves-light">
-                <!-- <img src="${article.emblemUrl}" /> -->
-              </div>
-            </a>
-            <div class="card-content">
-              <span class="card-title truncate">${"-"}</span>
-              <p>${article.startDate}</p>
-              <p>${article.endDate}</p>
-            </div>
-          </div>
-        `;
-        }
       });
       // Sisipkan komponen card ke dalam elemen dengan id #content
-      document.getElementById("articles").innerHTML = articlesHTML;
+      document.getElementById("standings").innerHTML = standingsHTML;
     })
     .catch(error);
 }

@@ -27,7 +27,7 @@ self.addEventListener("install", function(event) {
 
 //Get assets from cache
 self.addEventListener("fetch", function(event) {
-  var base_url = "https://private-044be-dicodingfootball.apiary-mock.com/";
+  var base_url = "https://api.football-data.org/v2/";
   if (event.request.url.indexOf(base_url) > -1) {
     event.respondWith(
       caches.open(CACHE_NAME).then(function(cache) {
