@@ -81,6 +81,69 @@ function getStandings() {
     .catch(error);
 }
 
+function getTeams() {
+  if ('caches' in window) {
+    caches.match(base_url + "competitions/PL/teams").then(function (response) {
+      if (response) {
+        response.json().then(function (data) {
+          var teamsHTML = "";
+          data.teams[0].table.forEach(function (team) {
+            teamsHTML += `
+              <tr>
+                  <td>${team.position}.</td>
+                  <td>${team.team.name}</td>
+                  <td>${team.playedGames}</td>
+                  <td>${team.won}</td>
+                  <td>${team.draw}</td>
+                  <td>${team.lost}</td>
+                  <td>${team.goalsFor}</td>
+                  <td>${team.goalsAgainst}</td>
+                  <td>${team.goalDifference}</td>
+                  <td>${team.points}</td>
+              </tr>
+            `;
+          });
+          // Sisipkan komponen card ke dalam elemen dengan id #content
+          document.getElementById("teams").innerHTML = teamsHTML;
+        })
+      }
+    })
+  }
+  fetch(base_url + "competitions/PL/teams", {
+    headers:{'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0'}
+  })
+    .then(status)
+    .then(json)
+    .then(function (data) {
+      // Objek/array JavaScript dari response.json() masuk lewat data.
+      // Menyusun komponen card artikel secara dinamis
+      var teamsHTML = "";
+      data.teams.forEach(function (team) {
+          teamsHTML += `
+            <div class="col s12 m6 l4">
+              <div class="card">
+                  <div class="card-image waves-effect waves-block waves-light">
+                      <img class="activator" src="${team.crestUrl}">
+                  </div>
+                  <div class="card-content">
+                      <span class="card-title activator grey-text text-darken-4">${team.name}<i
+                              class="material-icons right">more_vert</i></span>
+                      <p>26 bahasa daerah</p>
+                  </div>
+                  <div class="card-reveal teal darken-4 white-text">
+                      <span class="card-title">${team.name}<i class="material-icons right">close</i></span>
+                      <p>Di Sumatera, sebanyak 3 bahasa daerah terancam punah.</p>
+                  </div>
+              </div>  
+            </div>  
+            `;
+      });
+      // Sisipkan komponen card ke dalam elemen dengan id #content
+      document.getElementById("teams").innerHTML = teamsHTML;
+    })
+    .catch(error);
+}
+
 function getArticleById() {
   return new Promise(function (resolve, reject) {
     // Ambil nilai query parameter (?id=)
