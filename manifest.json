@@ -1,0 +1,16 @@
+{
+    "name": "LigaBola",
+    "short_name": "LigaBola",
+    "description": "PWA tentang info liga sepakbola",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#0d47a1",
+    "theme_color": "#0d47a1",
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
