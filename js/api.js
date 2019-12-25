@@ -126,13 +126,16 @@ function getTeams() {
                       <img class="activator" src="${team.crestUrl}">
                   </div>
                   <div class="card-content">
-                      <span class="card-title activator grey-text text-darken-4">${team.name}<i
-                              class="material-icons right">more_vert</i></span>
-                      <p>26 bahasa daerah</p>
+                      <span class="card-title activator grey-text text-darken-4">${team.name}</span>
+                      <p>Founded: ${team.founded}</p>
                   </div>
-                  <div class="card-reveal teal darken-4 white-text">
+                  <div class="card-reveal blue darken-4 white-text">
                       <span class="card-title">${team.name}<i class="material-icons right">close</i></span>
-                      <p>Di Sumatera, sebanyak 3 bahasa daerah terancam punah.</p>
+                      <p><small>Website: <b>${team.website}</b></small></p>
+                      <p><small>Phone: <b>${team.phone}</b></small></p>
+                      <p><small>Email: <b>${team.email}</b></small></p>
+                      <p><small>Venue: <b>${team.venue}</b></small></p>
+                      <p><small>Address: <b>${team.address}</b></small></p>
                   </div>
               </div>  
             </div>  
