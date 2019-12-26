@@ -13,7 +13,8 @@ var urlsToCache = [
   "/css/style.css",
   "/js/materialize.min.js",
   "/js/nav.js",
-  "/js/api.js"
+  "/js/api.js",
+  "/js/sw-reg.js"
 ];
 
 //Save assets to cache
