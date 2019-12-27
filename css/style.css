@@ -4,3 +4,23 @@
     padding-top: 35px;
     margin: auto;
 }
+
+.team-info-img {
+    height: 225px;
+    width: auto;
+    padding: 10px;
+    margin: auto;
+}
+
+.standing-img {
+    height: 2em;
+    margin-top: 8px;
+}
+
+td {
+    padding: 10px 5px;
+}
+
+table.centered tbody tr td.align-left-td {
+    text-align: left;
+}

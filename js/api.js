@@ -50,7 +50,7 @@ function getStandings() {
       }
     })
   }
-  fetch(base_url + "competitions/PL/standings", {
+  fetch(base_url + "competitions/PL/standings?standingType=TOTAL", {
     headers:{'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0'}
   })
     .then(status)
@@ -62,8 +62,11 @@ function getStandings() {
       data.standings[0].table.forEach(function (standing) {
           standingsHTML += `
             <tr>
-                <td>${standing.position}.</td>
+                <td>${standing.position}</td>
                 <td>
+                  <img class="standing-img" src="${standing.team.crestUrl}" />
+                </td>
+                <td class="align-left-td">
                   <a href="./team_info.html?team_id=${standing.team.id}">
                     ${standing.team.name}
                   </a>
@@ -126,20 +129,14 @@ function getTeams() {
           teamsHTML += `
             <div class="col s12 m6 l4">
               <div class="card">
+                  <a href="./team_info.html?team_id=${team.id}">
                   <div class="card-image waves-effect waves-block waves-light">
                       <img class="activator" src="${team.crestUrl}">
                   </div>
+                  </a>
                   <div class="card-content">
                       <span class="card-title activator grey-text text-darken-4">${team.name}</span>
                       <p>Founded: ${team.founded}</p>
-                  </div>
-                  <div class="card-reveal blue darken-4 white-text">
-                      <span class="card-title">${team.name}<i class="material-icons right">close</i></span>
-                      <p><small>Website: <b>${team.website}</b></small></p>
-                      <p><small>Phone: <b>${team.phone}</b></small></p>
-                      <p><small>Email: <b>${team.email}</b></small></p>
-                      <p><small>Venue: <b>${team.venue}</b></small></p>
-                      <p><small>Address: <b>${team.address}</b></small></p>
                   </div>
               </div>  
             </div>  
@@ -179,7 +176,8 @@ function getMatches() {
       }
     })
   }
-  fetch(base_url + "competitions/PL/matches?matchday=19", {
+  
+  fetch(base_url + "competitions/PL/matches", {
     headers:{'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0'}
   })
     .then(status)
@@ -187,6 +185,15 @@ function getMatches() {
     .then(function (data) {
       // Objek/array JavaScript dari response.json() masuk lewat data.
       // Menyusun komponen card artikel secara dinamis
+      var matchday = "";
+      data.matches.forEach(function (day) {
+        if (day.status == "SCHEDULED") {
+          matchday = day.matchday;
+          console.log(matchday);
+          return;
+        }
+      });
+
       var matchesHTML = "";
       data.matches.forEach(function (match) {
           var score;
@@ -251,16 +258,69 @@ function getTeamById() {
         console.log(data);
         // Menyusun komponen card artikel secara dinamis
         var teamHTML = `
-          <div class="card">
-            <div class="card-image waves-effect waves-block waves-light">
-              <img src="${data.crestUrl}" />
+          <h3>${data.name}</h3>
+          <div class="row">
+            <div class="col s12 m4 l3">
+              <img class="team-info-img" src="${data.crestUrl}" />
             </div>
-            <div class="card-content">
-              <span class="card-title">${data.name}</span>
-              <p>${data.address}</p>
+            <div class="col s12 m8 l9">
+                <ul class="collection">
+                    <li class="collection-item">Founded <b>${data.founded}</b></li>
+                    <li class="collection-item">Phone <b>${data.phone}</b></li>
+                    <li class="collection-item">Email <b>${data.email}</b></li>
+                    <li class="collection-item">Website <b>${data.website}</b></li>
+                    <li class="collection-item">Address <b>${data.address}</b></li>
+                </ul>
             </div>
-          </div>
+          </div>       
         `;
+        
+        // data.activeCompetitions.forEach(function (activeComp) {
+        //   teamHTML += `
+        //     <p>Competition ${activeComp.name}</p>            
+        //   `;
+        // })
+
+        var playerHTML = "";
+        data.squad.forEach(function (player) {
+          var shirtNumber = "";
+          if(player.shirtNumber) {
+            shirtNumber = player.shirtNumber;
+          }
+        
+          if(player.role == "PLAYER") {
+            playerHTML += `
+              <tr>
+                <td>${player.name}</td>
+                <td>${player.position}</td>
+                <td>${shirtNumber}</td>
+                <td>${player.dateOfBirth}</td>
+                <td>${player.nationality}</td>
+              </tr>
+            `
+          }
+        });
+
+        teamHTML += `
+        <h5>Players</h5>
+        <hr />  
+        <table class="highlight">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Shirt Number</th>
+                <th>DOB</th>
+                <th>Nationality</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${playerHTML}
+            <tbody>
+          </table>
+          <br />
+        `;
+
         // Sisipkan komponen card ke dalam elemen dengan id #content
         document.getElementById("body-content").innerHTML = teamHTML;
         // Kirim objek data hasil parsing json agar bisa disimpan ke indexed db
