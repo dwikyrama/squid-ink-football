@@ -1,98 +1,21 @@
-<div class="row">
-    <h2>Matches</h2>
-    <p>A little bit description like when are these data last updated.</p>
-    <table class="highlight">
-        <thead>
-            <tr>
-                <th>Matchday</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Owner</th>
-                <th>Score</th>
-                <th>Guest</th>
-            </tr>
-        </thead>
+<h2>Matches</h2>
+<p>A little bit description like when are these data last updated.</p>
 
-        <!-- Data tabel disisipkan ke dalam sini. -->
-        <tbody id="matches"></tbody>
-    </table>
-</div>
+<a class='dropdown-trigger btn blue darken-4' href='#' data-target='matchday-dropdown'>Matchday</a>
+<ul id='matchday-dropdown' class='dropdown-content'></ul>
 
-<!-- Data team disisipkan ke dalam sini. -->
-<!-- <div class="row" id="teams">
-    <a class='dropdown-trigger btn blue darken-4' href='#' data-target='matchday-dropdown'>Matchday   <i class="material-icons">arrow_drop_down</i>    </a>
-    <ul id='matchday-dropdown' class='dropdown-content'>
-        <li><a href="#!">Matchday 1</a></li>
-        <li><a href="#!">Matchday 2</a></li>
-        <li><a href="#!">Matchday 3</a></li>
-        <li><a href="#!">Matchday 4</a></li>
-        <li><a href="#!">Matchday 5</a></li>
-        <li><a href="#!">Matchday 6</a></li>
-        <li><a href="#!">Matchday 7</a></li>
-        <li><a href="#!">Matchday 8</a></li>
-        <li><a href="#!">Matchday 9</a></li>
-        <li><a href="#!">Matchday 10</a></li>
-        <li><a href="#!">Matchday 11</a></li>
-        <li><a href="#!">Matchday 12</a></li>
-        <li><a href="#!">Matchday 13</a></li>
-        <li><a href="#!">Matchday 14</a></li>
-        <li><a href="#!">Matchday 15</a></li>
-        <li><a href="#!">Matchday 16</a></li>
-        <li><a href="#!">Matchday 17</a></li>
-        <li><a href="#!">Matchday 18</a></li>
-        <li><a href="#!">Matchday 19</a></li>
-        <li><a href="#!">Matchday 20</a></li>
-        <li><a href="#!">Matchday 21</a></li>
-        <li><a href="#!">Matchday 22</a></li>
-        <li><a href="#!">Matchday 23</a></li>
-        <li><a href="#!">Matchday 24</a></li>
-        <li><a href="#!">Matchday 25</a></li>
-        <li><a href="#!">Matchday 26</a></li>
-        <li><a href="#!">Matchday 27</a></li>
-        <li><a href="#!">Matchday 28</a></li>
-        <li><a href="#!">Matchday 29</a></li>
-        <li><a href="#!">Matchday 30</a></li>
-        <li><a href="#!">Matchday 31</a></li>
-        <li><a href="#!">Matchday 32</a></li>
-        <li><a href="#!">Matchday 33</a></li>
-        <li><a href="#!">Matchday 34</a></li>
-        <li><a href="#!">Matchday 35</a></li>
-        <li><a href="#!">Matchday 36</a></li>
-        <li><a href="#!">Matchday 37</a></li>
-        <li><a href="#!">Matchday 38</a></li>
-        <li><a href="#!">Matchday 39</a></li>
-    </ul>
-</div> -->
+<table class="highlight">
+  <thead>
+    <tr>
+      <th>Matchday</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Owner</th>
+      <th>Score</th>
+      <th>Guest</th>
+    </tr>
+  </thead>
 
-<!-- <div class="row">
-    <div class="col s12">
-      <ul class="tabs">
-        <li class="tab col s3 m3 l3"><a href="#1">Matchday 1</a></li>
-        <li class="tab col s3 m3 l3"><a href="#2">Matchday 2</a></li>
-        <li class="tab col s3 m3 l3"><a href="#3">Matchday 3</a></li>
-        <li class="tab col s3 m3 l3"><a href="#4">Matchday 4</a></li>
-        <li class="tab col s3 m3 l3"><a href="#5">Matchday 5</a></li>
-        <li class="tab col s3 m3 l3"><a href="#6">Matchday 6</a></li>
-        <li class="tab col s3 m3 l3"><a href="#7">Matchday 7</a></li>
-        <li class="tab col s3 m3 l3"><a href="#8">Matchday 8</a></li>
-        <li class="tab col s3 m3 l3"><a href="#9">Matchday 9</a></li>
-        <li class="tab col s3 m3 l3"><a href="#10">Matchday 10</a></li>
-        <li class="tab col s3 m3 l3"><a href="#11">Matchday 11</a></li>
-        <li class="tab col s3 m3 l3"><a href="#12">Matchday 12</a></li>
-      </ul>
-    </div>
-    <div id="1" class="col s12">Matchday 1</div>
-    <div id="2" class="col s12">Matchday 2</div>
-    <div id="3" class="col s12">Matchday 3</div>
-    <div id="4" class="col s12">Matchday 4</div>
-    <div id="5" class="col s12">Matchday 5</div>
-    <div id="6" class="col s12">Matchday 6</div>
-    <div id="7" class="col s12">Matchday 7</div>
-    <div id="8" class="col s12">Matchday 8</div>
-    <div id="9" class="col s12">Matchday 9</div>
-    <div id="10" class="col s12">Matchday 10</div>
-    <div id="11" class="col s12">Matchday 11</div>
-    <div id="12" class="col s12">Matchday 12</div>
-  </div>
-         -->
-
+  <!-- Data tabel disisipkan ke dalam sini. -->
+  <tbody id="matches"></tbody>
+</table>

@@ -34,9 +34,12 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   // Load page content
+  var pathname = window.location.pathname;
   var page = window.location.hash.substr(1);
-  if (page == "") page = "home";
-  loadPage(page);
+  if (pathname == "/" || pathname == "/index.html") {
+    if (page == "") page = "home";
+    loadPage(page);
+  }
   
   function loadPage(page) {
     var xhttp = new XMLHttpRequest();
@@ -48,8 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
           getStandings();
         } else if (page === "team") {
           getTeams();
-        } else if (page === "match") {
-          getMatches();
         } else if (page === "saved") {
           getSavedArticles();
         }

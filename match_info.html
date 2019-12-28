@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>LigaBola</title>
+  <meta name="description" content="PWA Info Sepakbola" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/materialize.min.css" />
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0d47a1" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navigasi -->
+  <nav class="blue darken-4" role="navigation">
+    <div class="nav-wrapper container">
+      <a href="./index.html" class="brand-logo" id="logo-container"><b><i>LigaBola</i></b></a>
+      <a href="#" class="sidenav-trigger" data-target="nav-mobile">
+          <i class="material-icons">menu</i>
+      </a>
+      <ul class="topnav right hide-on-med-and-down"></ul>
+      <ul class="sidenav" id="nav-mobile"></ul>
+    </div>
+  </nav>
+  <!-- Akhir Navigasi -->
+  <div class="container" id="body-content">
+    <h2>Matches</h2>
+    <p>A little bit description like when are these data last updated.</p>
+
+    <a class='dropdown-trigger btn blue darken-4' href='#' data-target='matchday-dropdown'>Matchday</a>
+    <ul id='matchday-dropdown' class='dropdown-content'></ul>
+
+    <table class="highlight">
+      <thead>
+        <tr>
+          <th>Matchday</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Owner</th>
+          <th>Score</th>
+          <th>Guest</th>
+        </tr>
+      </thead>
+  
+      <!-- Data tabel disisipkan ke dalam sini. -->
+      <tbody id="matches"></tbody>
+    </table>
+  </div>
+
+  <div class="fixed-action-btn">
+    <a class="btn-floating btn-large blue darken-4" id="save">
+      <i class="large material-icons">save</i>
+    </a>
+  </div>
+
+  <script src="js/materialize.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/idb.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/sw-reg.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      M.AutoInit();
+      
+      var urlParams = new URLSearchParams(window.location.search);
+      var matchdayFilter = urlParams.get("matchday");
+      
+      if (matchdayFilter) {
+        getMatchesByDay();
+        console.log("Get Matches by Day executed")
+      } else {
+        getMatchday();
+        console.log("Get Matches executed")
+      }
+    
+      var isFromSaved = urlParams.get("saved");
+      var btnSave = document.getElementById("save");
+      if (isFromSaved) {
+        // Hide fab jika dimuat dari indexed db
+        btnSave.style.display = 'none';
+        // ambil artikel lalu tampilkan
+        getSavedTeamById();
+      } else {
+      }
+      btnSave.onclick = function () {
+        console.log("Tombol FAB di klik.");
+        item.then(function (article) {
+          saveForLater(article);
+        });
+      };
+    });
+  </script>
+</body>
+
+</html>

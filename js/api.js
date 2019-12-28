@@ -21,7 +21,7 @@ function error(error) {
   console.log("Error : " + error);
 }
 
-// Blok kode untuk melakukan request data json
+// Blok kode untuk mengambil data standing (ranking pertandingan)
 function getStandings() {
   if ('caches' in window) {
     caches.match(base_url + "competitions/PL/standings").then(function (response) {
@@ -56,8 +56,7 @@ function getStandings() {
     .then(status)
     .then(json)
     .then(function (data) {
-      // Objek/array JavaScript dari response.json() masuk lewat data.
-      // Menyusun komponen card artikel secara dinamis
+      // Blok kode untuk menampilkan tabel standing
       var standingsHTML = "";
       data.standings[0].table.forEach(function (standing) {
           standingsHTML += `
@@ -88,6 +87,7 @@ function getStandings() {
     .catch(error);
 }
 
+// Blok kode untuk mengambil data tim
 function getTeams() {
   if ('caches' in window) {
     caches.match(base_url + "competitions/PL/teams").then(function (response) {
@@ -148,7 +148,59 @@ function getTeams() {
     .catch(error);
 }
 
-function getMatches() {
+
+// Blok kode untuk mengambil data jadwal pertandingan
+function getMatchday() {
+  fetch(base_url + "competitions/PL", {
+    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
+  })
+    .then(status)
+    .then(json)
+    .then(function (data) {
+      fetch(base_url + "competitions/PL/matches?matchday=" + data.currentSeason.currentMatchday, {
+        headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
+      })
+        .then(status)
+        .then(json)
+        .then(function (data) {
+          // Objek/array JavaScript dari response.json() masuk lewat data.
+    
+          var matchesHTML = "";
+          data.matches.forEach(function (match) {
+            var score;
+            if (match.score.fullTime.homeTeam) {
+              score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
+            } else {
+              score = "-:-";
+            }
+    
+            matchesHTML += `
+                <tr>
+                  <td>${match.matchday}</td>
+                  <td>${match.utcDate}</td>
+                  <td>${match.status}</td>
+                  <td>${match.homeTeam.name}</td>
+                  <td>${score}</td>
+                  <td>${match.awayTeam.name}</td>
+                </tr>
+                `;
+          });
+          // Sisipkan komponen tabel ke dalam elemen dengan id #content
+          document.getElementById("matches").innerHTML = matchesHTML;
+        })
+        .catch(error);
+   }).catch(error);
+  
+  // Blok kode untuk menambahkan opsi matchday dalam dropdown
+  var day;
+  var matchdayHTML = "";
+  for (day=1; day<39; day++) {
+    matchdayHTML += `<li><a href="./match_info.html?matchday=${day}">Matchday ${day}</a></li>`;
+  }
+  document.getElementById("matchday-dropdown").innerHTML = matchdayHTML;
+}
+
+function getMatchesByDay() {
   if ('caches' in window) {
     caches.match(base_url + "competitions/PL/matches").then(function (response) {
       if (response) {
@@ -176,34 +228,28 @@ function getMatches() {
       }
     })
   }
-  
-  fetch(base_url + "competitions/PL/matches", {
-    headers:{'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0'}
+
+  var urlParams = new URLSearchParams(window.location.search);
+  var idParam = urlParams.get("matchday");
+
+  fetch(base_url + "competitions/PL/matches?matchday=" + idParam, {
+    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
   })
     .then(status)
     .then(json)
     .then(function (data) {
       // Objek/array JavaScript dari response.json() masuk lewat data.
-      // Menyusun komponen card artikel secara dinamis
-      var matchday = "";
-      data.matches.forEach(function (day) {
-        if (day.status == "SCHEDULED") {
-          matchday = day.matchday;
-          console.log(matchday);
-          return;
-        }
-      });
 
       var matchesHTML = "";
       data.matches.forEach(function (match) {
-          var score;
-          if (match.score.fullTime.homeTeam) {
-            score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
-          } else {
-            score = "-:-";
-          }
+        var score;
+        if (match.score.fullTime.homeTeam) {
+          score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
+        } else {
+          score = "-:-";
+        }
 
-          matchesHTML += `
+        matchesHTML += `
             <tr>
               <td>${match.matchday}</td>
               <td>${match.utcDate}</td>
@@ -214,7 +260,7 @@ function getMatches() {
             </tr>
             `;
       });
-      // Sisipkan komponen card ke dalam elemen dengan id #content
+      // Sisipkan komponen tabel ke dalam elemen dengan id #content
       document.getElementById("matches").innerHTML = matchesHTML;
     })
     .catch(error);
