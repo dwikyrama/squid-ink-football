@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function() {
     xhttp.send();
   }
 
-  // Load page content
   var pathname = window.location.pathname;
   var page = window.location.hash.substr(1);
   if (pathname == "/" || pathname == "/index.html") {
@@ -47,24 +46,26 @@ document.addEventListener("DOMContentLoaded", function() {
       if (this.readyState == 4) {
         var content = document.querySelector("#body-content");
 
+        // Get page content
         if (page === "home") {
           getStandings();
         } else if (page === "team") {
+          getTeams();
+        } else if (page === "match") {
           getTeams();
         } else if (page === "saved") {
           getSavedArticles();
         }
 
+        // Get page status
         if (this.status == 200) {
           content.innerHTML = xhttp.responseText;
-          
           // Initialize all materialize components
           M.AutoInit();
-
         } else if (this.status == 404) {
-          content.innerHTML = "<p>Halaman tidak ditemukan.</p>";
+          console.log("<p>Halaman tidak ditemukan.</p>");
         } else {
-          content.innerHTML = "<p>Ups.. halaman tidak dapat diakses.</p>";
+          console.log("<p>Ups.. halaman tidak dapat diakses.</p>");
         }
       }
     };

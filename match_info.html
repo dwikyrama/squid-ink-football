@@ -18,14 +18,15 @@
   <nav class="blue darken-4" role="navigation">
     <div class="nav-wrapper container">
       <a href="./index.html" class="brand-logo" id="logo-container"><b><i>LigaBola</i></b></a>
-      <a href="#" class="sidenav-trigger" data-target="nav-mobile">
-          <i class="material-icons">menu</i>
+      <a href="./index.html" class="sidenav-trigger" data-target="nav-mobile">
+        <i class="material-icons">arrow_back</i>
       </a>
       <ul class="topnav right hide-on-med-and-down"></ul>
       <ul class="sidenav" id="nav-mobile"></ul>
     </div>
   </nav>
   <!-- Akhir Navigasi -->
+  
   <div class="container" id="body-content">
     <h2>Matches</h2>
     <p>A little bit description like when are these data last updated.</p>
@@ -58,14 +59,14 @@
 
   <script src="js/materialize.min.js"></script>
   <script src="js/api.js"></script>
-  <script src="js/nav.js"></script>
   <script src="js/idb.js"></script>
   <script src="js/db.js"></script>
   <script src="js/sw-reg.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      M.AutoInit();
-      
+      var elems = document.querySelectorAll('.dropdown-trigger');
+      var instances = M.Dropdown.init(elems);
+
       var urlParams = new URLSearchParams(window.location.search);
       var matchdayFilter = urlParams.get("matchday");
       
@@ -76,6 +77,7 @@
         getMatchday();
         console.log("Get Matches executed")
       }
+      getMatchdayDropdown();
     
       var isFromSaved = urlParams.get("saved");
       var btnSave = document.getElementById("save");

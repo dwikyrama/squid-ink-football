@@ -148,7 +148,6 @@ function getTeams() {
     .catch(error);
 }
 
-
 // Blok kode untuk mengambil data jadwal pertandingan
 function getMatchday() {
   fetch(base_url + "competitions/PL", {
@@ -190,8 +189,10 @@ function getMatchday() {
         })
         .catch(error);
    }).catch(error);
-  
-  // Blok kode untuk menambahkan opsi matchday dalam dropdown
+}
+
+// Blok kode untuk menambahkan opsi matchday dalam dropdown
+function getMatchdayDropdown() {
   var day;
   var matchdayHTML = "";
   for (day=1; day<39; day++) {
