@@ -1,25 +1,25 @@
 // bagian ini beda dari codelab, okay
 var dbPromised = idb.open('footballDB', 1, upgradeDb => {  
-  var articleObjectStore = upgradeDb.createObjectStore('articles', {    
-      keyPath: 'ID'  
+  var teamObjectStore = upgradeDb.createObjectStore('teams', {    
+      keyPath: 'id'  
   });  
-  articleObjectStore.createIndex('post_title', 'post_title', {unique: false});
+  teamObjectStore.createIndex('shortName', 'shortName', {unique: false});
 });
 
-function saveForLater(article) {
+function saveForLater(teams) {
     dbPromised
         .then(function (db) {
-            var tx = db.transaction("articles", "readwrite");
-            var store = tx.objectStore("articles");
-            console.log(article);
-            store.add(article.result);
+            var tx = db.transaction("teams", "readwrite");
+            var store = tx.objectStore("teams");
+            console.log(teams);
+            store.add(teams);
             return tx.complete;
         })
         .then(function () {
-            console.log("Artikel berhasil disimpan.");
+            console.log("Tim favorit berhasil disimpan.");
         })
         .catch(function () {
-            console.log("Artikel tidak tersimpan.");
+            console.log("Tim favorit tidak tersimpan.");
         });
 }
 
@@ -27,8 +27,8 @@ function getAll() {
     return new Promise(function(resolve, reject) {
       dbPromised
         .then(function(db) {
-          var tx = db.transaction("articles", "readonly");
-          var store = tx.objectStore("articles");
+          var tx = db.transaction("teams", "readonly");
+          var store = tx.objectStore("teams");
           return store.getAll();
         })
         .then(function(articles) {

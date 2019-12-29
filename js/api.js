@@ -59,7 +59,7 @@ function getStandings() {
   }
 
   fetch(base_url + "competitions/PL/standings?standingType=TOTAL", {
-    headers:{'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0'}
+    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
   })
     .then(status)
     .then(json)
@@ -67,7 +67,7 @@ function getStandings() {
       // Blok kode untuk menyusun komponen tabel standing
       var standingsHTML = "";
       data.standings[0].table.forEach(function (standing) {
-          standingsHTML += `
+        standingsHTML += `
             <tr>
                 <td>${standing.position}</td>
                 <td>
@@ -126,7 +126,7 @@ function getTeams() {
     })
   }
   fetch(base_url + "competitions/PL/teams", {
-    headers:{'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0'}
+    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
   })
     .then(status)
     .then(json)
@@ -135,7 +135,7 @@ function getTeams() {
       // Menyusun komponen card artikel secara dinamis
       var teamsHTML = "";
       data.teams.forEach(function (team) {
-          teamsHTML += `
+        teamsHTML += `
             <div class="col s12 m6 l4">
               <div class="card">
                   <a href="./team_info.html?team_id=${team.id}">
@@ -157,7 +157,7 @@ function getTeams() {
     .catch(error);
 }
 
-// Blok kode untuk mengambil data jadwal pertandingan
+// Blok kode untuk mengambil data jadwal pertandingan terkini
 function getMatchday() {
   if ('caches' in window) {
     caches.match(base_url + "competitions/PL").then(function (response) {
@@ -166,6 +166,16 @@ function getMatchday() {
           caches.match(base_url + "competitions/PL/matches?matchday=" + data.currentSeason.currentMatchday).then(function (response) {
             if (response) {
               response.json().then(function (data) {
+                var lastUpdatedHTML = "";
+                lastUpdatedHTML = `
+                  Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
+                `;
+
+                var dropdownHTML = "";
+                dropdownHTML = `
+                  Matchday ${data.matches[0].matchday}
+                `;
+
                 var matchesHTML = "";
                 data.matches.forEach(function (match) {
                   var score;
@@ -174,19 +184,26 @@ function getMatchday() {
                   } else {
                     score = "-:-";
                   }
+                  var day = new Date(match.utcDate).toString();
 
                   matchesHTML += `
-                      <tr>
-                        <td>${match.matchday}</td>
-                        <td>${match.utcDate}</td>
-                        <td>${match.status}</td>
-                        <td>${match.homeTeam.name}</td>
-                        <td>${score}</td>
-                        <td>${match.awayTeam.name}</td>
-                      </tr>
-                  `;
+                    <tr>
+                      <td>
+                        ${day.slice(8, 10)} 
+                        ${day.slice(4, 7)} 
+                        ${day.slice(11, 15)}
+                      </td>
+                      <td>${day.slice(16, 21)}</td>
+                      <td>${match.status}</td>
+                      <td class="right-align">${match.homeTeam.name}</td>
+                      <td class="center-align">${score}</td>
+                      <td>${match.awayTeam.name}</td>
+                    </tr>
+                    `;
                 });
-                // Sisipkan komponen tabel ke dalam elemen dengan id #content
+                // Sisipkan komponen ke dalam elemen menurut id
+                document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
+                document.getElementById("dropdown-text").innerHTML = dropdownHTML;
                 document.getElementById("matches").innerHTML = matchesHTML;
               })
             }
@@ -210,6 +227,16 @@ function getMatchday() {
         .then(function (data) {
           // Objek/array JavaScript dari response.json() masuk lewat data.
 
+          var lastUpdatedHTML = "";
+          lastUpdatedHTML = `
+            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
+          `;
+
+          var dropdownHTML = "";
+          dropdownHTML = `
+            Matchday ${data.matches[0].matchday}
+          `;
+
           var matchesHTML = "";
           data.matches.forEach(function (match) {
             var score;
@@ -219,34 +246,36 @@ function getMatchday() {
               score = "-:-";
             }
 
+            // Get local time
+            var day = new Date(match.utcDate).toString();
+
             matchesHTML += `
                 <tr>
-                  <td>${match.matchday}</td>
-                  <td>${match.utcDate}</td>
+                  <td>
+                    ${day.slice(8, 10)} 
+                    ${day.slice(4, 7)} 
+                    ${day.slice(11, 15)}
+                  </td>
+                  <td>${day.slice(16, 21)}</td>
                   <td>${match.status}</td>
-                  <td>${match.homeTeam.name}</td>
-                  <td>${score}</td>
+                  <td class="right-align">${match.homeTeam.name}</td>
+                  <td class="center-align">${score}</td>
                   <td>${match.awayTeam.name}</td>
                 </tr>
                 `;
           });
-          // Sisipkan komponen tabel ke dalam elemen dengan id #content
+
+          // Sisipkan komponen ke dalam elemen menurut id
+          document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
+          document.getElementById("dropdown-text").innerHTML = dropdownHTML;
           document.getElementById("matches").innerHTML = matchesHTML;
+
         })
         .catch(error);
     }).catch(error);
 }
 
-// Blok kode untuk menambahkan opsi matchday dalam dropdown
-function getMatchdayDropdown() {
-  var day;
-  var matchdayHTML = "";
-  for (day=1; day<39; day++) {
-    matchdayHTML += `<li><a href="./match_info.html?matchday=${day}">Matchday ${day}</a></li>`;
-  }
-  document.getElementById("matchday-dropdown").innerHTML = matchdayHTML;
-}
-
+// Blok kode untuk mengambil data jadwal pertandingan menurut hari
 function getMatchesByDay() {
   var urlParams = new URLSearchParams(window.location.search);
   var idParam = urlParams.get("matchday");
@@ -255,6 +284,16 @@ function getMatchesByDay() {
     caches.match(base_url + "competitions/PL/matches?matchday=" + idParam).then(function (response) {
       if (response) {
         response.json().then(function (data) {
+          var lastUpdatedHTML = "";
+          lastUpdatedHTML = `
+            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
+          `;
+
+          var dropdownHTML = "";
+          dropdownHTML = `
+            Matchday ${data.matches[0].matchday}
+          `;
+
           var matchesHTML = "";
           data.matches.forEach(function (match) {
             var score;
@@ -264,18 +303,26 @@ function getMatchesByDay() {
               score = "-:-";
             }
 
+            var day = new Date(match.utcDate).toString();
+
             matchesHTML += `
-            <tr>
-              <td>${match.matchday}</td>
-              <td>${match.utcDate}</td>
-              <td>${match.status}</td>
-              <td>${match.homeTeam.name}</td>
-              <td>${score}</td>
-              <td>${match.awayTeam.name}</td>
-            </tr>
-            `;
+                <tr>
+                  <td>
+                    ${day.slice(8, 10)} 
+                    ${day.slice(4, 7)} 
+                    ${day.slice(11, 15)}
+                  </td>
+                  <td>${day.slice(16, 21)}</td>
+                  <td>${match.status}</td>
+                  <td class="right-align">${match.homeTeam.name}</td>
+                  <td class="center-align">${score}</td>
+                  <td>${match.awayTeam.name}</td>
+                </tr>
+                `;
           });
-          // Sisipkan komponen tabel ke dalam elemen dengan id #content
+          // Sisipkan komponen ke dalam elemen menurut id
+          document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
+          document.getElementById("dropdown-text").innerHTML = dropdownHTML;
           document.getElementById("matches").innerHTML = matchesHTML;
         })
       }
@@ -288,6 +335,16 @@ function getMatchesByDay() {
     .then(status)
     .then(json)
     .then(function (data) {
+      var lastUpdatedHTML = "";
+      lastUpdatedHTML = `
+            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
+          `;
+
+      var dropdownHTML = "";
+      dropdownHTML = `
+            Matchday ${data.matches[0].matchday}
+          `;
+
       var matchesHTML = "";
       data.matches.forEach(function (match) {
         var score;
@@ -297,21 +354,39 @@ function getMatchesByDay() {
           score = "-:-";
         }
 
+        var day = new Date(match.utcDate).toString();
+
         matchesHTML += `
-            <tr>
-              <td>${match.matchday}</td>
-              <td>${match.utcDate}</td>
-              <td>${match.status}</td>
-              <td>${match.homeTeam.name}</td>
-              <td>${score}</td>
-              <td>${match.awayTeam.name}</td>
-            </tr>
-            `;
+                <tr>
+                  <td>
+                    ${day.slice(8, 10)} 
+                    ${day.slice(4, 7)} 
+                    ${day.slice(11, 15)}
+                  </td>
+                  <td>${day.slice(16, 21)}</td>
+                  <td>${match.status}</td>
+                  <td class="right-align">${match.homeTeam.name}</td>
+                  <td class="center-align">${score}</td>
+                  <td>${match.awayTeam.name}</td>
+                </tr>
+                `;
       });
-      // Sisipkan komponen tabel ke dalam elemen dengan id #content
+      // Sisipkan komponen ke dalam elemen menurut id
+      document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
+      document.getElementById("dropdown-text").innerHTML = dropdownHTML;
       document.getElementById("matches").innerHTML = matchesHTML;
     })
     .catch(error);
+}
+
+// Blok kode untuk menambahkan opsi hari pertandingan dalam dropdown
+function getMatchdayDropdown() {
+  var day;
+  var matchdayHTML = "";
+  for (day = 1; day < 39; day++) {
+    matchdayHTML += `<li><a href="./match_info.html?matchday=${day}">Matchday ${day}</a></li>`;
+  }
+  document.getElementById("matchday-dropdown").innerHTML = matchdayHTML;
 }
 
 function getTeamById() {
@@ -350,15 +425,18 @@ function getTeamById() {
               }
 
               if (player.role == "PLAYER") {
+                var dob = new Date(player.dateOfBirth).toUTCString();
                 playerHTML += `
-              <tr>
-                <td>${player.name}</td>
-                <td>${player.position}</td>
-                <td>${shirtNumber}</td>
-                <td>${player.dateOfBirth}</td>
-                <td>${player.nationality}</td>
-              </tr>
-            `
+                  <tr>
+                    <td>${player.name}</td>
+                    <td>${player.position}</td>
+                    <td class="center-align">${shirtNumber}</td>
+                    <td class="right-align">
+                      ${dob.slice(5, 16)} 
+                    </td>
+                    <td>${player.nationality}</td>
+                  </tr>
+                `;
               }
             });
 
@@ -370,8 +448,8 @@ function getTeamById() {
               <tr>
                 <th>Name</th>
                 <th>Position</th>
-                <th>Shirt Number</th>
-                <th>DOB</th>
+                <th class="center-align">Shirt Number</th>
+                <th class="right-align">DOB</th>
                 <th>Nationality</th>
               </tr>
             </thead>
@@ -379,10 +457,9 @@ function getTeamById() {
               ${playerHTML}
             <tbody>
           </table>
-          <br />
         `;
             // Sisipkan komponen tabel ke dalam elemen dengan id #body-content
-            document.getElementById("body-content").innerHTML = articleHTML;
+            document.getElementById("body-content").innerHTML = teamHTML;
             // Kirim objek data hasil parsing json agar bisa disimpan ke indexed db
             resolve(data);
           });
@@ -422,15 +499,18 @@ function getTeamById() {
           }
 
           if (player.role == "PLAYER") {
+            var dob = new Date(player.dateOfBirth).toUTCString();
             playerHTML += `
               <tr>
                 <td>${player.name}</td>
                 <td>${player.position}</td>
-                <td>${shirtNumber}</td>
-                <td>${player.dateOfBirth}</td>
+                <td class="center-align">${shirtNumber}</td>
+                <td class="right-align">
+                  ${dob.slice(5, 16)} 
+                </td>
                 <td>${player.nationality}</td>
               </tr>
-            `
+            `;
           }
         });
 
@@ -442,8 +522,8 @@ function getTeamById() {
               <tr>
                 <th>Name</th>
                 <th>Position</th>
-                <th>Shirt Number</th>
-                <th>DOB</th>
+                <th class="center-align">Shirt Number</th>
+                <th class="right-align">DOB</th>
                 <th>Nationality</th>
               </tr>
             </thead>
@@ -451,7 +531,6 @@ function getTeamById() {
               ${playerHTML}
             <tbody>
           </table>
-          <br />
         `;
 
         // Sisipkan komponen tabel ke dalam elemen dengan id #body.content
@@ -462,36 +541,37 @@ function getTeamById() {
   });
 }
 
-// function getSavedArticles() {
-//   getAll().then(function(articles) {
-//     console.log(articles);
-//     // Menyusun komponen card artikel secara dinamis
-//     var articlesHTML = "";
-//     articles.forEach(function(article) {
-//       var description = article.post_content.substring(0,100);
-//       articlesHTML += `
-//                   <div class="card">
-//                     <a href="./article.html?id=${article.ID}&saved=true">
-//                       <div class="card-image waves-effect waves-block waves-light">
-//                         <img src="${article.cover}" />
-//                       </div>
-//                     </a>
-//                     <div class="card-content">
-//                       <span class="card-title truncate">${article.post_title}</span>
-//                       <p>${description}</p>
-//                     </div>
-//                   </div>
-//                 `;
-//     });
-//     // Sisipkan komponen card ke dalam elemen dengan id #body-content
-//     document.getElementById("body-content").innerHTML = articlesHTML;
-//   });
-// }
+function getFavoriteTeams() {
+  getAll().then(function(data) {
+    console.log(data);
+    // Menyusun komponen card artikel secara dinamis
+    var teamsHTML = "";
+    data.teams.forEach(function (team) {
+      teamsHTML += `
+          <div class="col s12 m6 l4">
+            <div class="card">
+                <a href="./team_info.html?team_id=${team.id}">
+                <div class="card-image waves-effect waves-block waves-light">
+                    <img class="activator" src="${team.crestUrl}">
+                </div>
+                </a>
+                <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">${team.name}</span>
+                    <p>Founded: ${team.founded}</p>
+                </div>
+            </div>  
+          </div>  
+          `;
+    });
+    // Sisipkan komponen card ke dalam elemen dengan id #body-content
+    document.getElementById("teams").innerHTML = teamsHTML;
+  });
+}
 
 // function getSavedArticleById() {
 //   var urlParams = new URLSearchParams(window.location.search);
 //   var idParam = urlParams.get("id");
-  
+
 //   getById(idParam).then(function(article) {
 //     articleHTML = '';
 //     var articleHTML = `

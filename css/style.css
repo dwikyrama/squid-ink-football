@@ -21,6 +21,18 @@ td {
     padding: 10px 5px;
 }
 
+table {
+    margin-bottom: 64px;
+}
+
 table.centered tbody tr td.align-left-td {
     text-align: left;
+}
+
+.btn {
+    padding: 0px 40px;
+}
+
+#last-updated {
+    font-size: 11px;
 }
