@@ -402,10 +402,10 @@ function getTeamById() {
             var teamHTML = `
           <h3>${data.name}</h3>
           <div class="row">
-            <div class="col s12 m4 l3">
+            <div class="col s12 m4">
               <img class="team-info-img" src="${data.crestUrl}" />
             </div>
-            <div class="col s12 m8 l9">
+            <div class="col s12 m8">
                 <ul class="collection">
                     <li class="collection-item">Founded <b>${data.founded}</b></li>
                     <li class="collection-item">Phone <b>${data.phone}</b></li>
@@ -476,10 +476,10 @@ function getTeamById() {
         var teamHTML = `
           <h3>${data.name}</h3>
           <div class="row">
-            <div class="col s12 m4 l3">
+            <div class="col s12 m4">
               <img class="team-info-img" src="${data.crestUrl}" />
             </div>
-            <div class="col s12 m8 l9">
+            <div class="col s12 m8">
                 <ul class="collection">
                     <li class="collection-item">Founded <b>${data.founded}</b></li>
                     <li class="collection-item">Phone <b>${data.phone}</b></li>
@@ -546,11 +546,11 @@ function getFavoriteTeams() {
     console.log(data);
     // Menyusun komponen card artikel secara dinamis
     var teamsHTML = "";
-    data.teams.forEach(function (team) {
+    data.forEach(function (team) {
       teamsHTML += `
           <div class="col s12 m6 l4">
             <div class="card">
-                <a href="./team_info.html?team_id=${team.id}">
+                <a href="./team_info.html?team_id=${team.id}&saved=true">
                 <div class="card-image waves-effect waves-block waves-light">
                     <img class="activator" src="${team.crestUrl}">
                 </div>
@@ -568,38 +568,87 @@ function getFavoriteTeams() {
   });
 }
 
-// function getSavedArticleById() {
-//   var urlParams = new URLSearchParams(window.location.search);
-//   var idParam = urlParams.get("id");
+function getFavoriteTeamById() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var idParam = urlParams.get("team_id");
+  var idParamInt = parseInt(idParam);
 
-//   getById(idParam).then(function(article) {
-//     articleHTML = '';
-//     var articleHTML = `
-//     <div class="card">
-//       <div class="card-image waves-effect waves-block waves-light">
-//         <img src="${article.cover}" />
-//       </div>
-//       <div class="card-content">
-//         <span class="card-title">${article.post_title}</span>
-//         ${snarkdown(article.post_content)}
-//       </div>
-//     </div>
-//   `;
-//     // Sisipkan komponen card ke dalam elemen dengan id #content
-//     document.getElementById("body-content").innerHTML = articleHTML;
-//   });
-// }
+  getById(idParamInt).then(function(data) {
+    var teamHTML = `
+          <h3>${data.name}</h3>
+          <div class="row">
+            <div class="col s12 m4 l3">
+              <img class="team-info-img" src="${data.crestUrl}" />
+            </div>
+            <div class="col s12 m8 l9">
+                <ul class="collection">
+                    <li class="collection-item">Founded <b>${data.founded}</b></li>
+                    <li class="collection-item">Phone <b>${data.phone}</b></li>
+                    <li class="collection-item">Email <b>${data.email}</b></li>
+                    <li class="collection-item">Website <b>${data.website}</b></li>
+                    <li class="collection-item">Address <b>${data.address}</b></li>
+                </ul>
+            </div>
+          </div>       
+        `;
 
-// function getById(id) {
-//   return new Promise(function(resolve, reject) {
-//     dbPromised
-//       .then(function(db) {
-//         var tx = db.transaction("articles", "readonly");
-//         var store = tx.objectStore("articles");
-//         return store.get(id);
-//       })
-//       .then(function(article) {
-//         resolve(article);
-//       });
-//   });
-// }
+        var playerHTML = "";
+        data.squad.forEach(function (player) {
+          var shirtNumber = "";
+          if (player.shirtNumber) {
+            shirtNumber = player.shirtNumber;
+          }
+
+          if (player.role == "PLAYER") {
+            var dob = new Date(player.dateOfBirth).toUTCString();
+            playerHTML += `
+              <tr>
+                <td>${player.name}</td>
+                <td>${player.position}</td>
+                <td class="center-align">${shirtNumber}</td>
+                <td class="right-align">
+                  ${dob.slice(5, 16)} 
+                </td>
+                <td>${player.nationality}</td>
+              </tr>
+            `;
+          }
+        });
+
+        teamHTML += `
+        <h5>Players</h5>
+        <hr />  
+        <table class="highlight">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th class="center-align">Shirt Number</th>
+                <th class="right-align">DOB</th>
+                <th>Nationality</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${playerHTML}
+            <tbody>
+          </table>
+        `;
+
+        // Sisipkan komponen tabel ke dalam elemen dengan id #body.content
+        document.getElementById("body-content").innerHTML = teamHTML;
+  });
+}
+
+function getById(id) {
+  return new Promise(function(resolve, reject) {
+    dbPromised
+      .then(function(db) {
+        var tx = db.transaction("teams", "readonly");
+        var store = tx.objectStore("teams");
+        return store.get(id);
+      })
+      .then(function(teams) {
+        resolve(teams);
+      });
+  });
+}

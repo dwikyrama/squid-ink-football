@@ -18,7 +18,7 @@
   <nav class="blue darken-4" role="navigation">
     <div class="nav-wrapper container">
       <a href="./index.html" class="brand-logo" id="logo-container"><b><i>LigaBola</i></b></a>
-      <a href="./index.html" class="sidenav-trigger" data-target="nav-mobile">
+      <a href="./index.html" class="sidenav-trigger" id="back-arrow" data-target="nav-mobile">
         <i class="material-icons">arrow_back</i>
       </a>
       <ul class="topnav right hide-on-med-and-down"></ul>
@@ -44,18 +44,24 @@
       var urlParams = new URLSearchParams(window.location.search);
       var isFromSaved = urlParams.get("saved");
       var btnSave = document.getElementById("save");
+      var backArrow = document.getElementById("back-arrow");
+      
       if (isFromSaved) {
         // Hide fab jika dimuat dari indexed db
         btnSave.style.display = 'none';
-        // ambil artikel lalu tampilkan
-        getSavedTeamById();
+        // ambil data team lalu tampilkan
+        getFavoriteTeamById();
+        // mengganti rujukan back-arrow ke saved page
+        backArrow.href = "./index.html#saved";
+      
       } else {
         var item = getTeamById();
       }
+
       btnSave.onclick = function () {
         console.log("Tombol FAB di klik.");
-        item.then(function (article) {
-          saveForLater(article);
+        item.then(function (team) {
+          saveForLater(team);
         });
       };
     });

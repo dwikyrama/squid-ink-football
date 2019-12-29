@@ -51,10 +51,8 @@ document.addEventListener("DOMContentLoaded", function() {
           getStandings();
         } else if (page === "team") {
           getTeams();
-        } else if (page === "match") {
-          getTeams();
         } else if (page === "saved") {
-          getSavedArticles();
+          getFavoriteTeams();
         }
 
         // Get page status

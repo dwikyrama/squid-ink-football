@@ -31,8 +31,8 @@ function getAll() {
           var store = tx.objectStore("teams");
           return store.getAll();
         })
-        .then(function(articles) {
-          resolve(articles);
+        .then(function(teams) {
+          resolve(teams);
         });
     });
   }
