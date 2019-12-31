@@ -37,3 +37,7 @@ table.centered tbody tr td.align-left-td {
 #last-updated {
     font-size: 11px;
 }
+
+.btn-flat {
+    padding: 0 3px;
+}

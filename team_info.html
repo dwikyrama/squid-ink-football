@@ -18,7 +18,7 @@
   <nav class="blue darken-4" role="navigation">
     <div class="nav-wrapper container">
       <a href="./index.html" class="brand-logo" id="logo-container"><b><i>LigaBola</i></b></a>
-      <a href="./index.html" class="sidenav-trigger" id="back-arrow" data-target="nav-mobile">
+      <a href="./index.html#team" class="sidenav-trigger" id="back-arrow" data-target="nav-mobile">
         <i class="material-icons">arrow_back</i>
       </a>
       <ul class="topnav right hide-on-med-and-down"></ul>
@@ -53,13 +53,13 @@
         getFavoriteTeamById();
         // mengganti rujukan back-arrow ke saved page
         backArrow.href = "./index.html#saved";
-      
       } else {
         var item = getTeamById();
       }
 
       btnSave.onclick = function () {
         console.log("Tombol FAB di klik.");
+        console.log(item);
         item.then(function (team) {
           saveForLater(team);
         });

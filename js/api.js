@@ -157,238 +157,6 @@ function getTeams() {
     .catch(error);
 }
 
-// Blok kode untuk mengambil data jadwal pertandingan terkini
-function getMatchday() {
-  if ('caches' in window) {
-    caches.match(base_url + "competitions/PL").then(function (response) {
-      if (response) {
-        response.json().then(function (data) {
-          caches.match(base_url + "competitions/PL/matches?matchday=" + data.currentSeason.currentMatchday).then(function (response) {
-            if (response) {
-              response.json().then(function (data) {
-                var lastUpdatedHTML = "";
-                lastUpdatedHTML = `
-                  Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
-                `;
-
-                var dropdownHTML = "";
-                dropdownHTML = `
-                  Matchday ${data.matches[0].matchday}
-                `;
-
-                var matchesHTML = "";
-                data.matches.forEach(function (match) {
-                  var score;
-                  if (match.score.fullTime.homeTeam) {
-                    score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
-                  } else {
-                    score = "-:-";
-                  }
-                  var day = new Date(match.utcDate).toString();
-
-                  matchesHTML += `
-                    <tr>
-                      <td>
-                        ${day.slice(8, 10)} 
-                        ${day.slice(4, 7)} 
-                        ${day.slice(11, 15)}
-                      </td>
-                      <td>${day.slice(16, 21)}</td>
-                      <td>${match.status}</td>
-                      <td class="right-align">${match.homeTeam.name}</td>
-                      <td class="center-align">${score}</td>
-                      <td>${match.awayTeam.name}</td>
-                    </tr>
-                    `;
-                });
-                // Sisipkan komponen ke dalam elemen menurut id
-                document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
-                document.getElementById("dropdown-text").innerHTML = dropdownHTML;
-                document.getElementById("matches").innerHTML = matchesHTML;
-              })
-            }
-          })
-        })
-      }
-    })
-  }
-
-  fetch(base_url + "competitions/PL", {
-    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
-  })
-    .then(status)
-    .then(json)
-    .then(function (data) {
-      fetch(base_url + "competitions/PL/matches?matchday=" + data.currentSeason.currentMatchday, {
-        headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
-      })
-        .then(status)
-        .then(json)
-        .then(function (data) {
-          // Objek/array JavaScript dari response.json() masuk lewat data.
-
-          var lastUpdatedHTML = "";
-          lastUpdatedHTML = `
-            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
-          `;
-
-          var dropdownHTML = "";
-          dropdownHTML = `
-            Matchday ${data.matches[0].matchday}
-          `;
-
-          var matchesHTML = "";
-          data.matches.forEach(function (match) {
-            var score;
-            if (match.score.fullTime.homeTeam) {
-              score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
-            } else {
-              score = "-:-";
-            }
-
-            // Get local time
-            var day = new Date(match.utcDate).toString();
-
-            matchesHTML += `
-                <tr>
-                  <td>
-                    ${day.slice(8, 10)} 
-                    ${day.slice(4, 7)} 
-                    ${day.slice(11, 15)}
-                  </td>
-                  <td>${day.slice(16, 21)}</td>
-                  <td>${match.status}</td>
-                  <td class="right-align">${match.homeTeam.name}</td>
-                  <td class="center-align">${score}</td>
-                  <td>${match.awayTeam.name}</td>
-                </tr>
-                `;
-          });
-
-          // Sisipkan komponen ke dalam elemen menurut id
-          document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
-          document.getElementById("dropdown-text").innerHTML = dropdownHTML;
-          document.getElementById("matches").innerHTML = matchesHTML;
-
-        })
-        .catch(error);
-    }).catch(error);
-}
-
-// Blok kode untuk mengambil data jadwal pertandingan menurut hari
-function getMatchesByDay() {
-  var urlParams = new URLSearchParams(window.location.search);
-  var idParam = urlParams.get("matchday");
-
-  if ('caches' in window) {
-    caches.match(base_url + "competitions/PL/matches?matchday=" + idParam).then(function (response) {
-      if (response) {
-        response.json().then(function (data) {
-          var lastUpdatedHTML = "";
-          lastUpdatedHTML = `
-            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
-          `;
-
-          var dropdownHTML = "";
-          dropdownHTML = `
-            Matchday ${data.matches[0].matchday}
-          `;
-
-          var matchesHTML = "";
-          data.matches.forEach(function (match) {
-            var score;
-            if (match.score.fullTime.homeTeam) {
-              score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
-            } else {
-              score = "-:-";
-            }
-
-            var day = new Date(match.utcDate).toString();
-
-            matchesHTML += `
-                <tr>
-                  <td>
-                    ${day.slice(8, 10)} 
-                    ${day.slice(4, 7)} 
-                    ${day.slice(11, 15)}
-                  </td>
-                  <td>${day.slice(16, 21)}</td>
-                  <td>${match.status}</td>
-                  <td class="right-align">${match.homeTeam.name}</td>
-                  <td class="center-align">${score}</td>
-                  <td>${match.awayTeam.name}</td>
-                </tr>
-                `;
-          });
-          // Sisipkan komponen ke dalam elemen menurut id
-          document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
-          document.getElementById("dropdown-text").innerHTML = dropdownHTML;
-          document.getElementById("matches").innerHTML = matchesHTML;
-        })
-      }
-    })
-  }
-
-  fetch(base_url + "competitions/PL/matches?matchday=" + idParam, {
-    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
-  })
-    .then(status)
-    .then(json)
-    .then(function (data) {
-      var lastUpdatedHTML = "";
-      lastUpdatedHTML = `
-            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
-          `;
-
-      var dropdownHTML = "";
-      dropdownHTML = `
-            Matchday ${data.matches[0].matchday}
-          `;
-
-      var matchesHTML = "";
-      data.matches.forEach(function (match) {
-        var score;
-        if (match.score.fullTime.homeTeam) {
-          score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
-        } else {
-          score = "-:-";
-        }
-
-        var day = new Date(match.utcDate).toString();
-
-        matchesHTML += `
-                <tr>
-                  <td>
-                    ${day.slice(8, 10)} 
-                    ${day.slice(4, 7)} 
-                    ${day.slice(11, 15)}
-                  </td>
-                  <td>${day.slice(16, 21)}</td>
-                  <td>${match.status}</td>
-                  <td class="right-align">${match.homeTeam.name}</td>
-                  <td class="center-align">${score}</td>
-                  <td>${match.awayTeam.name}</td>
-                </tr>
-                `;
-      });
-      // Sisipkan komponen ke dalam elemen menurut id
-      document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
-      document.getElementById("dropdown-text").innerHTML = dropdownHTML;
-      document.getElementById("matches").innerHTML = matchesHTML;
-    })
-    .catch(error);
-}
-
-// Blok kode untuk menambahkan opsi hari pertandingan dalam dropdown
-function getMatchdayDropdown() {
-  var day;
-  var matchdayHTML = "";
-  for (day = 1; day < 39; day++) {
-    matchdayHTML += `<li><a href="./match_info.html?matchday=${day}">Matchday ${day}</a></li>`;
-  }
-  document.getElementById("matchday-dropdown").innerHTML = matchdayHTML;
-}
-
 function getTeamById() {
   return new Promise(function (resolve, reject) {
     // Ambil nilai query parameter (?id=)
@@ -652,3 +420,265 @@ function getById(id) {
       });
   });
 }
+
+// Blok kode untuk mengambil data jadwal pertandingan terkini
+function getMatchday() {
+  if ('caches' in window) {
+    caches.match(base_url + "competitions/PL").then(function (response) {
+      if (response) {
+        response.json().then(function (data) {
+          caches.match(base_url + "competitions/PL/matches?matchday=" + data.currentSeason.currentMatchday).then(function (response) {
+            if (response) {
+              response.json().then(function (data) {
+                var lastUpdatedHTML = "";
+                lastUpdatedHTML = `
+                  Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
+                `;
+
+                var dropdownHTML = "";
+                dropdownHTML = `
+                  Matchday ${data.matches[0].matchday}
+                `;
+
+                var matchesHTML = "";
+                data.matches.forEach(function (match) {
+                  var score;
+                  if (match.score.fullTime.homeTeam) {
+                    score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
+                  } else {
+                    score = "-:-";
+                  }
+                  
+                  var day = new Date(match.utcDate).toString();
+
+                  matchesHTML += `
+                    <tr>
+                      <td>
+                        ${day.slice(8, 10)} 
+                        ${day.slice(4, 7)} 
+                        ${day.slice(11, 15)}
+                      </td>
+                      <td>${day.slice(16, 21)}</td>
+                      <td>${match.status}</td>
+                      <td class="right-align">${match.homeTeam.name}</td>
+                      <td class="center-align">${score}</td>
+                      <td>${match.awayTeam.name}</td>
+                    </tr>
+                    `;
+                });
+                // Sisipkan komponen ke dalam elemen menurut id
+                document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
+                document.getElementById("dropdown-text").innerHTML = dropdownHTML;
+                document.getElementById("matches").innerHTML = matchesHTML;
+              })
+            }
+          })
+        })
+      }
+    })
+  }
+
+  fetch(base_url + "competitions/PL", {
+    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
+  })
+    .then(status)
+    .then(json)
+    .then(function (data) {
+      fetch(base_url + "competitions/PL/matches?matchday=" + data.currentSeason.currentMatchday, {
+        headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
+      })
+        .then(status)
+        .then(json)
+        .then(function (data) {
+          // Objek/array JavaScript dari response.json() masuk lewat data.
+
+          var lastUpdatedHTML = "";
+          lastUpdatedHTML = `
+            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
+          `;
+
+          var dropdownHTML = "";
+          dropdownHTML = `
+            Matchday ${data.matches[0].matchday}
+          `;
+
+          var matchesHTML = "";
+          data.matches.forEach(function (match) {
+            var score;
+            if (match.score.fullTime.homeTeam) {
+              score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
+            } else {
+              score = "-:-";
+            }
+
+            // Get local time
+            var day = new Date(match.utcDate).toString();
+
+            var saveButton = "";
+            if (match.status == "SCHEDULED") {
+              saveButton = `
+                <a class="btn-flat" id=${match.id} onclick="saveThenRemove(event)">
+                  <i class="material-icons">save</i>
+                </a>
+              `;
+            }
+                  
+            matchesHTML += `
+                <tr>
+                  <td>
+                    ${day.slice(8, 10)} 
+                    ${day.slice(4, 7)} 
+                    ${day.slice(11, 15)}
+                  </td>
+                  <td>${day.slice(16, 21)}</td>
+                  <td>${match.status}${saveButton}</td>
+                  <td class="right-align">${match.homeTeam.name}</td>
+                  <td class="center-align">${score}</td>
+                  <td>${match.awayTeam.name}</td>
+                </tr>
+                `;
+          });
+
+          // Sisipkan komponen ke dalam elemen menurut id
+          document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
+          document.getElementById("dropdown-text").innerHTML = dropdownHTML;
+          document.getElementById("matches").innerHTML = matchesHTML;
+
+        })
+        .catch(error);
+    }).catch(error);
+}
+
+// Blok kode untuk mengambil data jadwal pertandingan menurut hari
+function getMatchesByDay() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var idParam = urlParams.get("matchday");
+
+  if ('caches' in window) {
+    caches.match(base_url + "competitions/PL/matches?matchday=" + idParam).then(function (response) {
+      if (response) {
+        response.json().then(function (data) {
+          var lastUpdatedHTML = "";
+          lastUpdatedHTML = `
+            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
+          `;
+
+          var dropdownHTML = "";
+          dropdownHTML = `
+            Matchday ${data.matches[0].matchday}
+          `;
+
+          var matchesHTML = "";
+          data.matches.forEach(function (match) {
+            var score;
+            if (match.score.fullTime.homeTeam) {
+              score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
+            } else {
+              score = "-:-";
+            }
+
+            var day = new Date(match.utcDate).toString();
+
+            matchesHTML += `
+                <tr>
+                  <td>
+                    ${day.slice(8, 10)} 
+                    ${day.slice(4, 7)} 
+                    ${day.slice(11, 15)}
+                  </td>
+                  <td>${day.slice(16, 21)}</td>
+                  <td>${match.status}</td>
+                  <td class="right-align">${match.homeTeam.name}</td>
+                  <td class="center-align">${score}</td>
+                  <td>${match.awayTeam.name}</td>
+                </tr>
+                `;
+          });
+          // Sisipkan komponen ke dalam elemen menurut id
+          document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
+          document.getElementById("dropdown-text").innerHTML = dropdownHTML;
+          document.getElementById("matches").innerHTML = matchesHTML;
+        })
+      }
+    })
+  }
+
+  fetch(base_url + "competitions/PL/matches?matchday=" + idParam, {
+    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
+  })
+    .then(status)
+    .then(json)
+    .then(function (data) {
+      var lastUpdatedHTML = "";
+      lastUpdatedHTML = `
+            Last updated<br/>${data.matches[0].lastUpdated.slice(0, 10)} ${data.matches[0].lastUpdated.slice(11, 16)}
+          `;
+
+      var dropdownHTML = "";
+      dropdownHTML = `
+            Matchday ${data.matches[0].matchday}
+          `;
+
+      var matchesHTML = "";
+      data.matches.forEach(function (match) {
+        var score;
+        if (match.score.fullTime.homeTeam) {
+          score = match.score.fullTime.homeTeam + ":" + match.score.fullTime.awayTeam;
+        } else {
+          score = "-:-";
+        }
+
+        var day = new Date(match.utcDate).toString();
+
+        matchesHTML += `
+                <tr>
+                  <td>
+                    ${day.slice(8, 10)} 
+                    ${day.slice(4, 7)} 
+                    ${day.slice(11, 15)}
+                  </td>
+                  <td>${day.slice(16, 21)}</td>
+                  <td>${match.status}</td>
+                  <td class="right-align">${match.homeTeam.name}</td>
+                  <td class="center-align">${score}</td>
+                  <td>${match.awayTeam.name}</td>
+                </tr>
+                `;
+      });
+      // Sisipkan komponen ke dalam elemen menurut id
+      document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
+      document.getElementById("dropdown-text").innerHTML = dropdownHTML;
+      document.getElementById("matches").innerHTML = matchesHTML;
+    })
+    .catch(error);
+}
+
+// Blok kode untuk menambahkan opsi hari pertandingan dalam dropdown
+function getMatchdayDropdown() {
+  var day;
+  var matchdayHTML = "";
+  for (day = 1; day < 39; day++) {
+    matchdayHTML += `<li><a href="./match_info.html?matchday=${day}">Matchday ${day}</a></li>`;
+  }
+  document.getElementById("matchday-dropdown").innerHTML = matchdayHTML;
+}
+
+// Blok kode untuk menyimpan jadwal
+function saveThenRemove(e) {
+  var el = e.currentTarget;
+
+  // Ambil jadwal pertandingan menurut ID
+  fetch(base_url + "matches/" + el.id, {
+    headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
+  })
+    .then(status)
+    .then(json)
+    .then(function (match) {
+      saveMatches(match);
+    })
+    .catch(error);
+
+  el.remove();
+  console.log("This match is saved.");
+}
+

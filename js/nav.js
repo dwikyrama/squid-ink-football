@@ -36,9 +36,10 @@ document.addEventListener("DOMContentLoaded", function() {
   var pathname = window.location.pathname;
   var page = window.location.hash.substr(1);
   if (pathname == "/" || pathname == "/index.html") {
-    if (page == "") page = "home";
-    loadPage(page);
-  }
+    if (page == "") {
+      page = "home";
+    }
+  } loadPage(page);
   
   function loadPage(page) {
     var xhttp = new XMLHttpRequest();
