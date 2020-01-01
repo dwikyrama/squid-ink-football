@@ -58,3 +58,17 @@ function saveMatches(matches) {
       console.log("Jadwal tidak tersimpan.");
     });
 }
+
+function getAllSavedMatches() {
+  return new Promise(function (resolve, reject) {
+    dbPromised
+      .then(function (db) {
+        var tx = db.transaction("matches", "readonly");
+        var store = tx.objectStore("matches");
+        return store.getAll();
+      })
+      .then(function (matches) {
+        resolve(matches);
+      });
+  });
+}

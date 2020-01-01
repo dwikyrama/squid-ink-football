@@ -314,23 +314,30 @@ function getFavoriteTeams() {
     console.log(data);
     // Menyusun komponen card artikel secara dinamis
     var teamsHTML = "";
-    data.forEach(function (team) {
+
+    if (data.length == 0) {
       teamsHTML += `
-          <div class="col s12 m6 l4">
-            <div class="card">
-                <a href="./team_info.html?team_id=${team.id}&saved=true">
-                <div class="card-image waves-effect waves-block waves-light">
-                    <img class="activator" src="${team.crestUrl}">
-                </div>
-                </a>
-                <div class="card-content">
-                    <span class="card-title activator grey-text text-darken-4">${team.name}</span>
-                    <p>Founded: ${team.founded}</p>
-                </div>
+        <p><em>Apparently, you don't have any favorite teams yet.</em></p>
+      `
+    } else {
+      data.forEach(function (team) {
+        teamsHTML += `
+            <div class="col s12 m6 l4">
+              <div class="card">
+                  <a href="./team_info.html?team_id=${team.id}&saved=true">
+                  <div class="card-image waves-effect waves-block waves-light">
+                      <img class="activator" src="${team.crestUrl}">
+                  </div>
+                  </a>
+                  <div class="card-content">
+                      <span class="card-title activator grey-text text-darken-4">${team.name}</span>
+                      <p>Founded: ${team.founded}</p>
+                  </div>
+              </div>  
             </div>  
-          </div>  
-          `;
-    });
+            `;
+      });
+    }
     // Sisipkan komponen card ke dalam elemen dengan id #body-content
     document.getElementById("teams").innerHTML = teamsHTML;
   });
@@ -451,6 +458,15 @@ function getMatchday() {
                   
                   var day = new Date(match.utcDate).toString();
 
+                  var saveButton = "";
+                  if (match.status == "SCHEDULED") {
+                    saveButton = `
+                      <a class="btn-flat" id=${match.id} onclick="saveThenRemove(event)">
+                        <i class="material-icons">save</i>
+                      </a>
+                    `;
+                  }
+
                   matchesHTML += `
                     <tr>
                       <td>
@@ -459,7 +475,7 @@ function getMatchday() {
                         ${day.slice(11, 15)}
                       </td>
                       <td>${day.slice(16, 21)}</td>
-                      <td>${match.status}</td>
+                      <td class="fixed-width">${match.status}${saveButton}</td>
                       <td class="right-align">${match.homeTeam.name}</td>
                       <td class="center-align">${score}</td>
                       <td>${match.awayTeam.name}</td>
@@ -531,7 +547,7 @@ function getMatchday() {
                     ${day.slice(11, 15)}
                   </td>
                   <td>${day.slice(16, 21)}</td>
-                  <td>${match.status}${saveButton}</td>
+                  <td class="fixed-width">${match.status}${saveButton}</td>
                   <td class="right-align">${match.homeTeam.name}</td>
                   <td class="center-align">${score}</td>
                   <td>${match.awayTeam.name}</td>
@@ -579,6 +595,15 @@ function getMatchesByDay() {
 
             var day = new Date(match.utcDate).toString();
 
+            var saveButton = "";
+            if (match.status == "SCHEDULED") {
+              saveButton = `
+                <a class="btn-flat" id=${match.id} onclick="saveThenRemove(event)">
+                  <i class="material-icons">save</i>
+                </a>
+              `;
+            }
+
             matchesHTML += `
                 <tr>
                   <td>
@@ -587,7 +612,7 @@ function getMatchesByDay() {
                     ${day.slice(11, 15)}
                   </td>
                   <td>${day.slice(16, 21)}</td>
-                  <td>${match.status}</td>
+                  <td class="fixed-width">${match.status}${saveButton}</td>
                   <td class="right-align">${match.homeTeam.name}</td>
                   <td class="center-align">${score}</td>
                   <td>${match.awayTeam.name}</td>
@@ -630,20 +655,29 @@ function getMatchesByDay() {
 
         var day = new Date(match.utcDate).toString();
 
+        var saveButton = "";
+        if (match.status == "SCHEDULED") {
+          saveButton = `
+            <a class="btn-flat" id=${match.id} onclick="saveThenRemove(event)">
+              <i class="material-icons">save</i>
+            </a>
+          `;
+        }
+
         matchesHTML += `
-                <tr>
-                  <td>
-                    ${day.slice(8, 10)} 
-                    ${day.slice(4, 7)} 
-                    ${day.slice(11, 15)}
-                  </td>
-                  <td>${day.slice(16, 21)}</td>
-                  <td>${match.status}</td>
-                  <td class="right-align">${match.homeTeam.name}</td>
-                  <td class="center-align">${score}</td>
-                  <td>${match.awayTeam.name}</td>
-                </tr>
-                `;
+          <tr>
+            <td>
+              ${day.slice(8, 10)} 
+              ${day.slice(4, 7)} 
+              ${day.slice(11, 15)}
+            </td>
+            <td>${day.slice(16, 21)}</td>
+            <td class="fixed-width">${match.status}${saveButton}</td>
+            <td class="right-align">${match.homeTeam.name}</td>
+            <td class="center-align">${score}</td>
+            <td>${match.awayTeam.name}</td>
+          </tr>
+          `;
       });
       // Sisipkan komponen ke dalam elemen menurut id
       document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
@@ -667,7 +701,7 @@ function getMatchdayDropdown() {
 function saveThenRemove(e) {
   var el = e.currentTarget;
 
-  // Ambil jadwal pertandingan menurut ID
+  // Ambil data jadwal pertandingan menurut ID
   fetch(base_url + "matches/" + el.id, {
     headers: { 'X-Auth-Token': '91edc29ed6324ae0b36c5b14383062d0' }
   })
@@ -678,7 +712,41 @@ function saveThenRemove(e) {
     })
     .catch(error);
 
+  // Hapus button setelah menyimpan jadwal
   el.remove();
-  console.log("This match is saved.");
 }
 
+function getSavedMatches() {
+  getAllSavedMatches().then(function(data) {
+    console.log(data);
+    // Menyusun komponen card artikel secara dinamis
+    var matchesHTML = "";
+
+    if (data.length == 0) {
+      matchesHTML += `
+        <p><em>Oops, you have no saved matches.</em></p>
+      `
+    } else {
+      data.forEach(function (match) {
+        var day = new Date(match.utcDate).toString();
+
+        matchesHTML += `
+        <tr>
+          <td>${match.status}</td>
+          <td>
+            ${day.slice(8, 10)} 
+            ${day.slice(4, 7)} 
+            ${day.slice(11, 15)}
+          </td>
+          <td>${day.slice(16, 21)}</td>
+          <td class="right-align">${match.homeTeam.name}</td>
+          <td class="center-align">vs</td>
+          <td>${match.awayTeam.name}</td>
+        </tr>
+        `;
+      });
+    }
+    // Sisipkan komponen card ke dalam elemen dengan id #body-content
+    document.getElementById("matches").innerHTML = matchesHTML;
+  });
+}

@@ -30,6 +30,10 @@ table.centered tbody tr td.align-left-td {
     text-align: left;
 }
 
+.fixed-width {
+    min-width: 115px;
+}
+
 .btn {
     padding: 0px 40px;
 }

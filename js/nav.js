@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
           getTeams();
         } else if (page === "saved") {
           getFavoriteTeams();
+          getSavedMatches();
         }
 
         // Get page status
