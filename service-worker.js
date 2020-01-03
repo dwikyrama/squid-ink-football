@@ -15,6 +15,8 @@ var urlsToCache = [
   "/js/materialize.min.js",
   "/js/nav.js",
   "/js/api.js",
+  "/js/idb.js",
+  "/js/db.js",
   "/js/sw-reg.js"
 ];
 
