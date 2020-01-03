@@ -732,7 +732,11 @@ function getSavedMatches() {
 
         matchesHTML += `
         <tr>
-          <td>${match.status}</td>
+          <td class="fixed-width">${match.status}
+            <a class="btn-flat" id=${match.id} onclick="removeMatches(this)">
+              <i class="material-icons">delete_forever</i>
+            </a>
+          </td>
           <td>
             ${day.slice(8, 10)} 
             ${day.slice(4, 7)} 
@@ -749,4 +753,17 @@ function getSavedMatches() {
     // Sisipkan komponen card ke dalam elemen dengan id #body-content
     document.getElementById("matches").innerHTML = matchesHTML;
   });
+}
+
+function removeMatches(match) {
+  var el = Number(match.id);
+  // Delete matches in database
+  deleteMatches(el);
+  // Delete matches in table
+  deleteRow(match);
+}
+
+function deleteRow(row) {
+  var i = row.parentNode.parentNode.rowIndex;
+  document.getElementById("saved-matches").deleteRow(i);
 }

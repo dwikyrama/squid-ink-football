@@ -11,7 +11,7 @@ var dbPromised = idb.open('footballDB', 1, upgradeDb => {
   matchObjectStore.createIndex('matchday', 'matchday', { unique: false });
 });
 
-function saveForLater(teams) {
+function saveTeam(teams) {
   dbPromised
     .then(function (db) {
       var tx = db.transaction("teams", "readwrite");
@@ -40,6 +40,22 @@ function getAll() {
         resolve(teams);
       });
   });
+}
+
+function deleteTeam(teams) {
+  dbPromised
+    .then(function (db) {
+      var tx = db.transaction("teams", "readwrite");
+      var store = tx.objectStore("teams");
+      store.delete(teams);
+      return tx.complete;
+    })
+    .then(function () {
+      console.log("Tim dihapus.");
+    })
+    .catch(function () {
+      console.log("Tim gagal dihapus.");
+    });
 }
 
 function saveMatches(matches) {
@@ -71,4 +87,20 @@ function getAllSavedMatches() {
         resolve(matches);
       });
   });
+}
+
+function deleteMatches(matches) {
+  dbPromised
+    .then(function (db) {
+      var tx = db.transaction("matches", "readwrite");
+      var store = tx.objectStore("matches");
+      store.delete(matches);
+      return tx.complete;
+    })
+    .then(function () {
+      console.log("Jadwal dihapus.");
+    })
+    .catch(function () {
+      console.log("Jadwal gagal dihapus.");
+    });
 }

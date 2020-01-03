@@ -31,7 +31,7 @@ table.centered tbody tr td.align-left-td {
 }
 
 .fixed-width {
-    min-width: 115px;
+    min-width: 125px;
 }
 
 .btn {
@@ -44,4 +44,8 @@ table.centered tbody tr td.align-left-td {
 
 .btn-flat {
     padding: 0 3px;
+}
+
+a.btn-flat:hover {
+    color:#0D47A1;
 }
