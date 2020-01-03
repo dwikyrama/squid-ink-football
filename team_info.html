@@ -58,7 +58,7 @@
       }
 
       btnSave.onclick = function () {
-        console.log("Tombol FAB di klik.");
+        M.toast({html: 'Favorite team saved!', classes: 'rounded', displayLength: 1500});
         console.log(item);
         item.then(function (team) {
           saveTeam(team);

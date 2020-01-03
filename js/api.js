@@ -27,16 +27,23 @@ function getStandings() {
     caches.match(base_url + "competitions/PL/standings?standingType=TOTAL").then(function (response) {
       if (response) {
         response.json().then(function (data) {
+          var lastUpdatedHTML = "";
+          lastUpdatedHTML = `
+              Last updated<br/>${data.competition.lastUpdated.slice(0, 10)} ${data.competition.lastUpdated.slice(11, 16)}
+            `;
+
           var standingsHTML = "";
           data.standings[0].table.forEach(function (standing) {
             standingsHTML += `
             <tr>
                 <td>${standing.position}</td>
                 <td>
-                  <img class="standing-img" src="${standing.team.crestUrl}" />
+                  <a href="./team_info.html?team_id=${standing.team.id}">
+                    <img class="standing-img" src="${standing.team.crestUrl}" />
+                  </a>
                 </td>
                 <td class="align-left-td">
-                  <a href="./team_info.html?team_id=${standing.team.id}">
+                  <a class="truncate" href="./team_info.html?team_id=${standing.team.id}">
                     ${standing.team.name}
                   </a>
                 </td>
@@ -44,8 +51,8 @@ function getStandings() {
                 <td>${standing.won}</td>
                 <td>${standing.draw}</td>
                 <td>${standing.lost}</td>
-                <td>${standing.goalsFor}</td>
-                <td>${standing.goalsAgainst}</td>
+                <td class="hide-on-small-only">${standing.goalsFor}</td>
+                <td class="hide-on-small-only">${standing.goalsAgainst}</td>
                 <td>${standing.goalDifference}</td>
                 <td>${standing.points}</td>
             </tr>
@@ -53,6 +60,7 @@ function getStandings() {
           });
           // Sisipkan komponen tabel ke dalam elemen dengan id #standings
           document.getElementById("standings").innerHTML = standingsHTML;
+          document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
         })
       }
     })
@@ -64,6 +72,11 @@ function getStandings() {
     .then(status)
     .then(json)
     .then(function (data) {
+      var lastUpdatedHTML = "";
+      lastUpdatedHTML = `
+          Last updated<br/>${data.competition.lastUpdated.slice(0, 10)} ${data.competition.lastUpdated.slice(11, 16)}
+        `;
+      
       // Blok kode untuk menyusun komponen tabel standing
       var standingsHTML = "";
       data.standings[0].table.forEach(function (standing) {
@@ -71,10 +84,12 @@ function getStandings() {
             <tr>
                 <td>${standing.position}</td>
                 <td>
-                  <img class="standing-img" src="${standing.team.crestUrl}" />
+                  <a href="./team_info.html?team_id=${standing.team.id}">
+                    <img class="standing-img" src="${standing.team.crestUrl}" />
+                  </a>
                 </td>
                 <td class="align-left-td">
-                  <a href="./team_info.html?team_id=${standing.team.id}">
+                  <a class="truncate" href="./team_info.html?team_id=${standing.team.id}">
                     ${standing.team.name}
                   </a>
                 </td>
@@ -82,8 +97,8 @@ function getStandings() {
                 <td>${standing.won}</td>
                 <td>${standing.draw}</td>
                 <td>${standing.lost}</td>
-                <td>${standing.goalsFor}</td>
-                <td>${standing.goalsAgainst}</td>
+                <td class="hide-on-small-only">${standing.goalsFor}</td>
+                <td class="hide-on-small-only">${standing.goalsAgainst}</td>
                 <td>${standing.goalDifference}</td>
                 <td>${standing.points}</td>
             </tr>
@@ -91,6 +106,7 @@ function getStandings() {
       });
       // Sisipkan komponen tabel ke dalam elemen dengan id #standings
       document.getElementById("standings").innerHTML = standingsHTML;
+      document.getElementById("last-updated").innerHTML = lastUpdatedHTML;
     })
     .catch(error);
 }
@@ -108,11 +124,11 @@ function getTeams() {
                 <div class="card">
                     <a href="./team_info.html?team_id=${team.id}">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="${team.crestUrl}">
+                        <img src="${team.crestUrl}">
                     </div>
                     </a>
                     <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">${team.name}</span>
+                        <span class="card-title grey-text text-darken-4">${team.shortName}</span>
                         <p>Founded: ${team.founded}</p>
                     </div>
                 </div>  
@@ -140,11 +156,11 @@ function getTeams() {
               <div class="card">
                   <a href="./team_info.html?team_id=${team.id}">
                   <div class="card-image waves-effect waves-block waves-light">
-                      <img class="activator" src="${team.crestUrl}">
+                      <img src="${team.crestUrl}">
                   </div>
                   </a>
                   <div class="card-content">
-                      <span class="card-title activator grey-text text-darken-4">${team.name}</span>
+                      <span class="card-title grey-text text-darken-4">${team.shortName}</span>
                       <p>Founded: ${team.founded}</p>
                   </div>
               </div>  
@@ -199,7 +215,7 @@ function getTeamById() {
                     <td>${player.name}</td>
                     <td>${player.position}</td>
                     <td class="center-align">${shirtNumber}</td>
-                    <td class="right-align">
+                    <td class="right-align hide-on-small-only">
                       ${dob.slice(5, 16)} 
                     </td>
                     <td>${player.nationality}</td>
@@ -217,7 +233,7 @@ function getTeamById() {
                 <th>Name</th>
                 <th>Position</th>
                 <th class="center-align">Shirt Number</th>
-                <th class="right-align">DOB</th>
+                <th class="right-align hide-on-small-only">Birth Date</th>
                 <th>Nationality</th>
               </tr>
             </thead>
@@ -273,7 +289,7 @@ function getTeamById() {
                 <td>${player.name}</td>
                 <td>${player.position}</td>
                 <td class="center-align">${shirtNumber}</td>
-                <td class="right-align">
+                <td class="right-align hide-on-small-only">
                   ${dob.slice(5, 16)} 
                 </td>
                 <td>${player.nationality}</td>
@@ -291,7 +307,7 @@ function getTeamById() {
                 <th>Name</th>
                 <th>Position</th>
                 <th class="center-align">Shirt Number</th>
-                <th class="right-align">DOB</th>
+                <th class="right-align hide-on-small-only">Birth Date</th>
                 <th>Nationality</th>
               </tr>
             </thead>
@@ -324,13 +340,16 @@ function getFavoriteTeams() {
         teamsHTML += `
             <div class="col s12 m6 l4">
               <div class="card">
-                  <a href="./team_info.html?team_id=${team.id}&saved=true">
-                  <div class="card-image waves-effect waves-block waves-light">
-                      <img class="activator" src="${team.crestUrl}">
-                  </div>
-                  </a>
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <a href="./team_info.html?team_id=${team.id}&saved=true">
+                          <img src="${team.crestUrl}">
+                        </a>
+                    </div>
                   <div class="card-content">
-                      <span class="card-title activator grey-text text-darken-4">${team.name}</span>
+                        <a class="btn-floating btn-small right grey darken-3" id=${team.id} onclick="removeTeam(this)">
+                          <i class="material-icons">clear</i>
+                        </a>
+                      <span class="card-title grey-text text-darken-4">${team.name}</span>
                       <p>Founded: ${team.founded}</p>
                   </div>
               </div>  
@@ -381,7 +400,7 @@ function getFavoriteTeamById() {
                 <td>${player.name}</td>
                 <td>${player.position}</td>
                 <td class="center-align">${shirtNumber}</td>
-                <td class="right-align">
+                <td class="right-align hide-on-small-only">
                   ${dob.slice(5, 16)} 
                 </td>
                 <td>${player.nationality}</td>
@@ -399,7 +418,7 @@ function getFavoriteTeamById() {
                 <th>Name</th>
                 <th>Position</th>
                 <th class="center-align">Shirt Number</th>
-                <th class="right-align">DOB</th>
+                <th class="right-align hide-on-small-only">Birth Date</th>
                 <th>Nationality</th>
               </tr>
             </thead>
@@ -426,6 +445,20 @@ function getById(id) {
         resolve(teams);
       });
   });
+}
+
+function removeTeam(team) {
+  var el = Number(team.id);
+  // Delete team in database
+  deleteTeam(el);
+  // Delete team card
+  deleteCard(team);
+  M.toast({html: 'Favorite team removed!', classes: 'rounded', displayLength: 1500});
+}
+
+function deleteCard(card) {
+  var i = card.parentNode.parentNode.parentNode;
+  i.parentNode.removeChild(i);
 }
 
 // Blok kode untuk mengambil data jadwal pertandingan terkini
@@ -468,18 +501,18 @@ function getMatchday() {
                   }
 
                   matchesHTML += `
-                    <tr>
-                      <td>
-                        ${day.slice(8, 10)} 
-                        ${day.slice(4, 7)} 
-                        ${day.slice(11, 15)}
-                      </td>
-                      <td>${day.slice(16, 21)}</td>
-                      <td class="fixed-width">${match.status}${saveButton}</td>
-                      <td class="right-align">${match.homeTeam.name}</td>
-                      <td class="center-align">${score}</td>
-                      <td>${match.awayTeam.name}</td>
-                    </tr>
+                  <tr>
+                    <td class="hide-on-small-only">
+                      ${day.slice(8, 10)} 
+                      ${day.slice(4, 7)} 
+                      ${day.slice(11, 15)}
+                    </td>
+                    <td>${day.slice(16, 21)}<span class="hide-on-med-and-up">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
+                    <td class="right-align">${match.homeTeam.name}</td>
+                    <td class="center-align">${score}</td>
+                    <td>${match.awayTeam.name}</td>
+                    <td>${saveButton}</td>
+                  </tr>
                     `;
                 });
                 // Sisipkan komponen ke dalam elemen menurut id
@@ -541,16 +574,16 @@ function getMatchday() {
                   
             matchesHTML += `
                 <tr>
-                  <td>
+                  <td class="hide-on-small-only">
                     ${day.slice(8, 10)} 
                     ${day.slice(4, 7)} 
                     ${day.slice(11, 15)}
                   </td>
-                  <td>${day.slice(16, 21)}</td>
-                  <td class="fixed-width">${match.status}${saveButton}</td>
+                  <td>${day.slice(16, 21)}<span class="hide-on-med-and-up">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
                   <td class="right-align">${match.homeTeam.name}</td>
                   <td class="center-align">${score}</td>
                   <td>${match.awayTeam.name}</td>
+                  <td>${saveButton}</td>
                 </tr>
                 `;
           });
@@ -605,18 +638,18 @@ function getMatchesByDay() {
             }
 
             matchesHTML += `
-                <tr>
-                  <td>
-                    ${day.slice(8, 10)} 
-                    ${day.slice(4, 7)} 
-                    ${day.slice(11, 15)}
-                  </td>
-                  <td>${day.slice(16, 21)}</td>
-                  <td class="fixed-width">${match.status}${saveButton}</td>
-                  <td class="right-align">${match.homeTeam.name}</td>
-                  <td class="center-align">${score}</td>
-                  <td>${match.awayTeam.name}</td>
-                </tr>
+            <tr>
+              <td class="hide-on-small-only">
+                ${day.slice(8, 10)} 
+                ${day.slice(4, 7)} 
+                ${day.slice(11, 15)}
+              </td>
+              <td>${day.slice(16, 21)}<span class="hide-on-med-and-up">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
+              <td class="right-align">${match.homeTeam.name}</td>
+              <td class="center-align">${score}</td>
+              <td>${match.awayTeam.name}</td>
+              <td>${saveButton}</td>
+            </tr>
                 `;
           });
           // Sisipkan komponen ke dalam elemen menurut id
@@ -665,18 +698,18 @@ function getMatchesByDay() {
         }
 
         matchesHTML += `
-          <tr>
-            <td>
-              ${day.slice(8, 10)} 
-              ${day.slice(4, 7)} 
-              ${day.slice(11, 15)}
-            </td>
-            <td>${day.slice(16, 21)}</td>
-            <td class="fixed-width">${match.status}${saveButton}</td>
-            <td class="right-align">${match.homeTeam.name}</td>
-            <td class="center-align">${score}</td>
-            <td>${match.awayTeam.name}</td>
-          </tr>
+        <tr>
+          <td class="hide-on-small-only">
+            ${day.slice(8, 10)} 
+            ${day.slice(4, 7)} 
+            ${day.slice(11, 15)}
+          </td>
+          <td>${day.slice(16, 21)}<span class="hide-on-med-and-up">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
+          <td class="right-align">${match.homeTeam.name}</td>
+          <td class="center-align">${score}</td>
+          <td>${match.awayTeam.name}</td>
+          <td>${saveButton}</td>
+        </tr>
           `;
       });
       // Sisipkan komponen ke dalam elemen menurut id
@@ -712,6 +745,8 @@ function saveThenRemove(e) {
     })
     .catch(error);
 
+  M.toast({html: 'Match schedule saved!', classes: 'rounded', displayLength: 1500});
+
   // Hapus button setelah menyimpan jadwal
   el.remove();
 }
@@ -731,21 +766,21 @@ function getSavedMatches() {
         var day = new Date(match.utcDate).toString();
 
         matchesHTML += `
-        <tr>
-          <td class="fixed-width">${match.status}
-            <a class="btn-flat" id=${match.id} onclick="removeMatches(this)">
-              <i class="material-icons">delete_forever</i>
-            </a>
-          </td>
-          <td>
+        <tr>            
+          <td class="hide-on-small-only">
             ${day.slice(8, 10)} 
             ${day.slice(4, 7)} 
             ${day.slice(11, 15)}
           </td>
-          <td>${day.slice(16, 21)}</td>
+          <td>${day.slice(16, 21)}<span class="show-on-small-only">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
           <td class="right-align">${match.homeTeam.name}</td>
           <td class="center-align">vs</td>
           <td>${match.awayTeam.name}</td>
+          <td>
+            <a class="btn-flat" id=${match.id} onclick="removeMatches(this)">
+              <i class="material-icons">delete_forever</i>
+            </a>
+          </td>
         </tr>
         `;
       });
@@ -761,6 +796,7 @@ function removeMatches(match) {
   deleteMatches(el);
   // Delete matches in table
   deleteRow(match);
+  M.toast({html: 'Match schedule removed!', classes: 'rounded', displayLength: 1500});
 }
 
 function deleteRow(row) {

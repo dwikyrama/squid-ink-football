@@ -28,14 +28,11 @@ table {
 
 table.centered tbody tr td.align-left-td {
     text-align: left;
-}
-
-.fixed-width {
-    min-width: 125px;
+    max-width: 64px;
 }
 
 .btn {
-    padding: 0px 40px;
+    width: 150px;
 }
 
 #last-updated {
@@ -48,4 +45,12 @@ table.centered tbody tr td.align-left-td {
 
 a.btn-flat:hover {
     color:#0D47A1;
+}
+
+.sidenav {
+    padding-top: 30px;
+}
+
+@media only screen and (max-device-width: 480px) {
+	html { font-size: 0.8em; }
 }
