@@ -1,6 +1,7 @@
 {
     "name": "LigaBola",
     "short_name": "LigaBola",
+    "gcm_sender_id": "713895810464",
     "description": "PWA tentang info liga sepakbola",
     "start_url": "/index.html",
     "display": "standalone",
