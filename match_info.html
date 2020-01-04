@@ -40,10 +40,10 @@
       </div>
     </div>
     <hr />
-    <table class="highlight">
+    <table class="highlight responsive-table">
       <thead>
         <tr>
-          <th class="hide-on-small-only">Date</th>
+          <th>Date</th>
           <th>Time</th>
           <th class="right-align">Home</th>
           <th class="center-align">Score</th>
@@ -64,6 +64,9 @@
   <script src="js/sw-reg.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      registerServiceWorker();
+      
+      // initialize dropdown
       var elems = document.querySelectorAll('.dropdown-trigger');
       var instances = M.Dropdown.init(elems);
 
@@ -72,10 +75,8 @@
       
       if (matchdayFilter) {
         getMatchesByDay();
-        console.log("Get Matches by Day executed")
       } else {
         getMatchday();
-        console.log("Get Matches executed")
       } getMatchdayDropdown();
     });
   </script>

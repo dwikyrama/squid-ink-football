@@ -17,7 +17,7 @@ function saveTeam(teams) {
       var tx = db.transaction("teams", "readwrite");
       var store = tx.objectStore("teams");
       console.log(teams);
-      store.add(teams);
+      store.put(teams);
       return tx.complete;
     })
     .then(function () {
@@ -64,7 +64,7 @@ function saveMatches(matches) {
       var tx = db.transaction("matches", "readwrite");
       var store = tx.objectStore("matches");
       console.log(matches.match);
-      store.add(matches.match);
+      store.put(matches.match);
       return tx.complete;
     })
     .then(function () {

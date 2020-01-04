@@ -1,4 +1,4 @@
-var base_url = "https://api.football-data.org/v2/";
+const base_url = "https://api.football-data.org/v2/";
 
 // Blok kode yang akan di panggil jika fetch berhasil
 function status(response) {
@@ -37,12 +37,12 @@ function getStandings() {
             standingsHTML += `
             <tr>
                 <td>${standing.position}</td>
-                <td>
+                <td class="fixed-height">
                   <a href="./team_info.html?team_id=${standing.team.id}">
-                    <img class="standing-img" src="${standing.team.crestUrl}" />
+                    <img class="standing-img" src="${standing.team.crestUrl.replace(/^http:\/\//i, 'https://')}" />
                   </a>
                 </td>
-                <td class="align-left-td">
+                <td class="align-left-td fixed-height">
                   <a class="truncate" href="./team_info.html?team_id=${standing.team.id}">
                     ${standing.team.name}
                   </a>
@@ -51,8 +51,8 @@ function getStandings() {
                 <td>${standing.won}</td>
                 <td>${standing.draw}</td>
                 <td>${standing.lost}</td>
-                <td class="hide-on-small-only">${standing.goalsFor}</td>
-                <td class="hide-on-small-only">${standing.goalsAgainst}</td>
+                <td>${standing.goalsFor}</td>
+                <td>${standing.goalsAgainst}</td>
                 <td>${standing.goalDifference}</td>
                 <td>${standing.points}</td>
             </tr>
@@ -83,12 +83,12 @@ function getStandings() {
         standingsHTML += `
             <tr>
                 <td>${standing.position}</td>
-                <td>
+                <td class="fixed-height">
                   <a href="./team_info.html?team_id=${standing.team.id}">
-                    <img class="standing-img" src="${standing.team.crestUrl}" />
+                    <img class="standing-img" src="${standing.team.crestUrl.replace(/^http:\/\//i, 'https://')}" />
                   </a>
                 </td>
-                <td class="align-left-td">
+                <td class="align-left-td fixed-height">
                   <a class="truncate" href="./team_info.html?team_id=${standing.team.id}">
                     ${standing.team.name}
                   </a>
@@ -97,8 +97,8 @@ function getStandings() {
                 <td>${standing.won}</td>
                 <td>${standing.draw}</td>
                 <td>${standing.lost}</td>
-                <td class="hide-on-small-only">${standing.goalsFor}</td>
-                <td class="hide-on-small-only">${standing.goalsAgainst}</td>
+                <td>${standing.goalsFor}</td>
+                <td>${standing.goalsAgainst}</td>
                 <td>${standing.goalDifference}</td>
                 <td>${standing.points}</td>
             </tr>
@@ -124,7 +124,7 @@ function getTeams() {
                 <div class="card">
                     <a href="./team_info.html?team_id=${team.id}">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img src="${team.crestUrl}">
+                        <img src="${team.crestUrl.replace(/^http:\/\//i, 'https://')}">
                     </div>
                     </a>
                     <div class="card-content">
@@ -156,7 +156,7 @@ function getTeams() {
               <div class="card">
                   <a href="./team_info.html?team_id=${team.id}">
                   <div class="card-image waves-effect waves-block waves-light">
-                      <img src="${team.crestUrl}">
+                      <img src="${team.crestUrl.replace(/^http:\/\//i, 'https://')}">
                   </div>
                   </a>
                   <div class="card-content">
@@ -187,7 +187,7 @@ function getTeamById() {
           <h3>${data.name}</h3>
           <div class="row">
             <div class="col s12 m4">
-              <img class="team-info-img" src="${data.crestUrl}" />
+              <img class="team-info-img" src="${data.crestUrl.replace(/^http:\/\//i, 'https://')}" />
             </div>
             <div class="col s12 m8">
                 <ul class="collection">
@@ -215,7 +215,7 @@ function getTeamById() {
                     <td>${player.name}</td>
                     <td>${player.position}</td>
                     <td class="center-align">${shirtNumber}</td>
-                    <td class="right-align hide-on-small-only">
+                    <td class="right-align">
                       ${dob.slice(5, 16)} 
                     </td>
                     <td>${player.nationality}</td>
@@ -227,13 +227,13 @@ function getTeamById() {
             teamHTML += `
         <h5>Players</h5>
         <hr />  
-        <table class="highlight">
+        <table class="highlight responsive-table">
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Position</th>
                 <th class="center-align">Shirt Number</th>
-                <th class="right-align hide-on-small-only">Birth Date</th>
+                <th class="right-align">Birth Date</th>
                 <th>Nationality</th>
               </tr>
             </thead>
@@ -261,7 +261,7 @@ function getTeamById() {
           <h3>${data.name}</h3>
           <div class="row">
             <div class="col s12 m4">
-              <img class="team-info-img" src="${data.crestUrl}" />
+              <img class="team-info-img" src="${data.crestUrl.replace(/^http:\/\//i, 'https://')}" />
             </div>
             <div class="col s12 m8">
                 <ul class="collection">
@@ -289,7 +289,7 @@ function getTeamById() {
                 <td>${player.name}</td>
                 <td>${player.position}</td>
                 <td class="center-align">${shirtNumber}</td>
-                <td class="right-align hide-on-small-only">
+                <td class="right-align">
                   ${dob.slice(5, 16)} 
                 </td>
                 <td>${player.nationality}</td>
@@ -301,13 +301,13 @@ function getTeamById() {
         teamHTML += `
         <h5>Players</h5>
         <hr />  
-        <table class="highlight">
+        <table class="highlight responsive-table">
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Position</th>
                 <th class="center-align">Shirt Number</th>
-                <th class="right-align hide-on-small-only">Birth Date</th>
+                <th class="right-align">Birth Date</th>
                 <th>Nationality</th>
               </tr>
             </thead>
@@ -342,7 +342,7 @@ function getFavoriteTeams() {
               <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                         <a href="./team_info.html?team_id=${team.id}&saved=true">
-                          <img src="${team.crestUrl}">
+                          <img src="${team.crestUrl.replace(/^http:\/\//i, 'https://')}">
                         </a>
                     </div>
                   <div class="card-content">
@@ -372,7 +372,7 @@ function getFavoriteTeamById() {
           <h3>${data.name}</h3>
           <div class="row">
             <div class="col s12 m4 l3">
-              <img class="team-info-img" src="${data.crestUrl}" />
+              <img class="team-info-img" src="${data.crestUrl.replace(/^http:\/\//i, 'https://')}" />
             </div>
             <div class="col s12 m8 l9">
                 <ul class="collection">
@@ -400,7 +400,7 @@ function getFavoriteTeamById() {
                 <td>${player.name}</td>
                 <td>${player.position}</td>
                 <td class="center-align">${shirtNumber}</td>
-                <td class="right-align hide-on-small-only">
+                <td class="right-align">
                   ${dob.slice(5, 16)} 
                 </td>
                 <td>${player.nationality}</td>
@@ -412,7 +412,7 @@ function getFavoriteTeamById() {
         teamHTML += `
         <h5>Players</h5>
         <hr />  
-        <table class="highlight">
+        <table class="highlight responsive-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -502,12 +502,12 @@ function getMatchday() {
 
                   matchesHTML += `
                   <tr>
-                    <td class="hide-on-small-only">
+                    <td">
                       ${day.slice(8, 10)} 
                       ${day.slice(4, 7)} 
                       ${day.slice(11, 15)}
                     </td>
-                    <td>${day.slice(16, 21)}<span class="hide-on-med-and-up">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
+                    <td>${day.slice(16, 21)}</td>
                     <td class="right-align">${match.homeTeam.name}</td>
                     <td class="center-align">${score}</td>
                     <td>${match.awayTeam.name}</td>
@@ -574,12 +574,12 @@ function getMatchday() {
                   
             matchesHTML += `
                 <tr>
-                  <td class="hide-on-small-only">
+                  <td>
                     ${day.slice(8, 10)} 
                     ${day.slice(4, 7)} 
                     ${day.slice(11, 15)}
                   </td>
-                  <td>${day.slice(16, 21)}<span class="hide-on-med-and-up">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
+                  <td>${day.slice(16, 21)}</td>
                   <td class="right-align">${match.homeTeam.name}</td>
                   <td class="center-align">${score}</td>
                   <td>${match.awayTeam.name}</td>
@@ -639,12 +639,12 @@ function getMatchesByDay() {
 
             matchesHTML += `
             <tr>
-              <td class="hide-on-small-only">
+              <td>
                 ${day.slice(8, 10)} 
                 ${day.slice(4, 7)} 
                 ${day.slice(11, 15)}
               </td>
-              <td>${day.slice(16, 21)}<span class="hide-on-med-and-up">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
+              <td>${day.slice(16, 21)}</td>
               <td class="right-align">${match.homeTeam.name}</td>
               <td class="center-align">${score}</td>
               <td>${match.awayTeam.name}</td>
@@ -699,12 +699,12 @@ function getMatchesByDay() {
 
         matchesHTML += `
         <tr>
-          <td class="hide-on-small-only">
+          <td>
             ${day.slice(8, 10)} 
             ${day.slice(4, 7)} 
             ${day.slice(11, 15)}
           </td>
-          <td>${day.slice(16, 21)}<span class="hide-on-med-and-up">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
+          <td>${day.slice(16, 21)}</td>
           <td class="right-align">${match.homeTeam.name}</td>
           <td class="center-align">${score}</td>
           <td>${match.awayTeam.name}</td>
@@ -767,12 +767,12 @@ function getSavedMatches() {
 
         matchesHTML += `
         <tr>            
-          <td class="hide-on-small-only">
+          <td>
             ${day.slice(8, 10)} 
             ${day.slice(4, 7)} 
             ${day.slice(11, 15)}
           </td>
-          <td>${day.slice(16, 21)}<span class="show-on-small-only">, ${day.slice(8, 10)} ${day.slice(4, 7)}</span></td>
+          <td>${day.slice(16, 21)}</td>
           <td class="right-align">${match.homeTeam.name}</td>
           <td class="center-align">vs</td>
           <td>${match.awayTeam.name}</td>

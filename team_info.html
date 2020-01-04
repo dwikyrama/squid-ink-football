@@ -41,6 +41,8 @@
   <script src="js/sw-reg.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      registerServiceWorker();
+      
       var urlParams = new URLSearchParams(window.location.search);
       var isFromSaved = urlParams.get("saved");
       var btnSave = document.getElementById("save");
@@ -63,6 +65,7 @@
         item.then(function (team) {
           saveTeam(team);
         });
+        btnSave.className += " disabled";
       };
     });
   </script>

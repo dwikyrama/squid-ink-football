@@ -9,5 +9,3 @@ function registerServiceWorker() {
           console.error('Registrasi service worker gagal.', err);
       });
 }
-
-registerServiceWorker();
