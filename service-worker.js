@@ -8,6 +8,7 @@ var urlsToCache = [
   "/manifest.json",
   "/images/icon-512.png",
   "/images/icon-192.png",
+  "/images/custom-icon-192.png",
   "/pages/home.html",
   "/pages/team.html",
   "/pages/saved.html",
@@ -77,7 +78,7 @@ self.addEventListener('push', function(event) {
   }
   var options = {
     body: body,
-    icon: 'img/notification.png',
+    icon: 'images/icon-192.png',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
